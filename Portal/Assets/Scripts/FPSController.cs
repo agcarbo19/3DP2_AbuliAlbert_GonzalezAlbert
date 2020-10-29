@@ -31,16 +31,14 @@ public class FPSController : MonoBehaviour
     public int m_MaxLife = 100;
     public int m_Ammo;
     public int m_MaxAmmo = 200;
-    public int m_Shield;
-    public int m_MaxShield = 50;
-    public Image m_BloodScreen;
-    private float m_alphaBloodScreen = 0f;
-    public TextMeshProUGUI m_TextAmmo;
-    public TextMeshProUGUI m_TextLife;
-    public TextMeshProUGUI m_TextShield;
-    public TextMeshProUGUI m_TextScore;
-    public TextMeshProUGUI m_TextDummyTime;
-    public GameObject m_GameOverCanv;
+    //public int m_Shield;
+    //public int m_MaxShield = 50;
+    //public TextMeshProUGUI m_TextAmmo;
+    //public TextMeshProUGUI m_TextLife;
+    //public TextMeshProUGUI m_TextShield;
+    //public TextMeshProUGUI m_TextScore;
+    //public TextMeshProUGUI m_TextDummyTime;
+    //public GameObject m_GameOverCanv;
 
     [Header("Bools")]
     public bool m_InvertVerticalAxis = true;
@@ -49,6 +47,14 @@ public class FPSController : MonoBehaviour
     public bool m_AngleLocked = false;
     public bool m_AimLocked = true;
     public bool m_IsMoving = false;
+
+    [Header("Jumping")]
+    public bool isJumping;
+    public float jumpTime;
+    public float jumpTimeCounter;
+    public float m_TimeSinceLastGround = 0.0f;
+    public float m_JumpThresholdSinceLastGround = 0.2f;
+    public float m_FallMultiplier = 1.01f;
 
     [Header("Input")]
     public KeyCode m_LeftKeyCode;
@@ -60,24 +66,16 @@ public class FPSController : MonoBehaviour
     public KeyCode m_DebugLockAngleKeyCode = KeyCode.I;
     public KeyCode m_DebugLockKeyCode = KeyCode.O;
 
-    [Header("Jumping")]
-    public bool isJumping;
-    public float jumpTime;
-    public float jumpTimeCounter;
-    public float m_TimeSinceLastGround = 0.0f;
-    public float m_JumpThresholdSinceLastGround = 0.2f;
-    public float m_FallMultiplier = 1.01f;
+    //[Header("Respawn")]
+    //public Transform m_RespawnPoint;
+    //public Transform m_RespawnZone0;
+    //public Transform m_RespawnZone1;
+    //public Transform m_RespawnZone2;
 
-    [Header("Respawn")]
-    public Transform m_RespawnPoint;
-    public Transform m_RespawnZone0;
-    public Transform m_RespawnZone1;
-    public Transform m_RespawnZone2;
-
-    [Header("Sounds")]
-    public AudioSource m_RunSound;
-    public AudioSource m_DamageSound;
-    public AudioSource m_ItemSound;
+    //[Header("Sounds")]
+    //public AudioSource m_RunSound;
+    //public AudioSource m_DamageSound;
+    //public AudioSource m_ItemSound;
 
     #endregion
 
@@ -95,8 +93,8 @@ public class FPSController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         m_Life = m_MaxLife;
         m_Ammo = m_MaxAmmo;
-        m_Shield = m_MaxShield;
-        m_RespawnPoint = m_RespawnZone0;
+        //m_Shield = m_MaxShield;
+        //m_RespawnPoint = m_RespawnZone0;
     }
 
     void Update()
@@ -235,15 +233,16 @@ public class FPSController : MonoBehaviour
             m_IsMoving = false;
         }
 
-        if (m_IsMoving)
-        {
-            if (!m_RunSound.isPlaying)
-                m_RunSound.Play();
-        }
-        else
-        {
-            m_RunSound.Stop();
-        }
+        ////Run Sounds
+        //if (m_IsMoving)
+        //{
+        //    if (!m_RunSound.isPlaying)
+        //        m_RunSound.Play();
+        //}
+        //else
+        //{
+        //    m_RunSound.Stop();
+        //}
         #endregion
 
         #region Correr-Sprint      
@@ -285,98 +284,98 @@ public class FPSController : MonoBehaviour
             m_OnGround = true;
         #endregion
 
-        #region HUD
-        m_BloodScreen.color = new Color(1f, 0, 0, m_alphaBloodScreen);
-        if (m_alphaBloodScreen > 0)
-        {
-            m_alphaBloodScreen -= 1f * Time.deltaTime;
-        }
+        //#region HUD
+        //m_BloodScreen.color = new Color(1f, 0, 0, m_alphaBloodScreen);
+        //if (m_alphaBloodScreen > 0)
+        //{
+        //    m_alphaBloodScreen -= 1f * Time.deltaTime;
+        //}
 
-        m_TextAmmo.text = m_GameController.m_Weapon.GetBullets().ToString() + " / " + m_Ammo.ToString();
-        m_TextLife.text = m_Life.ToString() + " / " + m_MaxLife.ToString();
-        m_TextShield.text = m_Shield.ToString() + " / " + m_MaxShield.ToString();
+        //m_TextAmmo.text = m_GameController.m_Weapon.GetBullets().ToString() + " / " + m_Ammo.ToString();
+        //m_TextLife.text = m_Life.ToString() + " / " + m_MaxLife.ToString();
+        //m_TextShield.text = m_Shield.ToString() + " / " + m_MaxShield.ToString();
 
-        #endregion
+        //#endregion
 
         if (m_Life <= 0)
         {
             KillPlayer();
         }
 
-        if (m_GameOverCanv.activeSelf == true)
-        {
-            if (Input.GetKey(m_JumpKey))
-            {
-                Retry();
-            }
-        }
+        //if (m_GameOverCanv.activeSelf == true)
+        //{
+        //    if (Input.GetKey(m_JumpKey))
+        //    {
+        //        Retry();
+        //    }
+        //}
     }
 
     public void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Item")
-        {
-            other.GetComponent<Item>().Pick();
-        }
+        //if (other.tag == "Item")
+        //{
+        //    other.GetComponent<Item>().Pick();
+        //}
 
         if (other.tag == "DeadZone")
         {
             KillPlayer();
         }
 
-        if (other.tag == "RespawnZone")
-        {
-            if (other.name == "RespawnZone1Col")
-                m_RespawnPoint = m_RespawnZone1;
-            if (other.name == "RespawnZone2Col")
-                m_RespawnPoint = m_RespawnZone2;
-        }
+        //if (other.tag == "RespawnZone")
+        //{
+        //    if (other.name == "RespawnZone1Col")
+        //        m_RespawnPoint = m_RespawnZone1;
+        //    if (other.name == "RespawnZone2Col")
+        //        m_RespawnPoint = m_RespawnZone2;
+        //}
     }
     public void KillPlayer()
     {
         m_Life = 0;
         Time.timeScale = 0f;
-        m_GameOverCanv.SetActive(true);
+        //m_GameOverCanv.SetActive(true);
     }
 
     public void Retry()
     {
         Time.timeScale = 1f;
-        StartCoroutine(m_GameController.RestartGame(m_RespawnPoint));
-        m_GameOverCanv.SetActive(false);
+        //StartCoroutine(m_GameController.RestartGame(m_RespawnPoint));
+        //m_GameOverCanv.SetActive(false);
 
     }
 
     public void RePatchPlayer()
     {
-        m_alphaBloodScreen = 0f;
+        //m_alphaBloodScreen = 0f;
         m_Life = m_MaxLife;
         m_Ammo = m_MaxAmmo;
-        m_Shield = m_MaxShield;
+        //m_Shield = m_MaxShield;
         m_GameController.m_Weapon.m_ActualBulletsInMag = m_GameController.m_Weapon.m_MaxMagSize;
     }
 
     public void HurtingPlayer(int Damage)
     {
-        m_alphaBloodScreen = 0.7f;
-        m_DamageSound.Play();
-        if (GetShield() > 0)
-        {
-            if (GetShield() - (Damage * 0.75f) <= 0)
-            {
-                RemoveShield(GetShield());
-            }
-            else
-            {
-                RemoveShield((int)(Damage * 0.75f));
-            }
+        //m_alphaBloodScreen = 0.7f;
+        //m_DamageSound.Play();
+        //if (GetShield() > 0)
+        //{
+        //    if (GetShield() - (Damage * 0.75f) <= 0)
+        //    {
+        //        RemoveShield(GetShield());
+        //    }
+        //    else
+        //    {
+        //        RemoveShield((int)(Damage * 0.75f));
+        //    }
 
-            RemoveLife((int)(Damage * 0.25f));
-        }
-        else
-        {
-            RemoveLife(Damage);
-        }
+        //    RemoveLife((int)(Damage * 0.25f));
+        //}
+        //else
+        //{
+        RemoveLife(Damage);
+        //}
     }
 
     #region Item Functions
@@ -413,20 +412,20 @@ public class FPSController : MonoBehaviour
     #endregion
 
     #region Get Set i Remove Shield
-    public void AddShield(int ShieldPoints)
-    {
-        m_Shield += ShieldPoints;
-    }
+    //public void AddShield(int ShieldPoints)
+    //{
+    //    m_Shield += ShieldPoints;
+    //}
 
-    public int GetShield()
-    {
-        return m_Shield;
-    }
+    //public int GetShield()
+    //{
+    //    return m_Shield;
+    //}
 
-    public void RemoveShield(int ShieldPoints)
-    {
-        m_Shield -= ShieldPoints;
-    }
+    //public void RemoveShield(int ShieldPoints)
+    //{
+    //    m_Shield -= ShieldPoints;
+    //}
     #endregion
     #endregion
 }
