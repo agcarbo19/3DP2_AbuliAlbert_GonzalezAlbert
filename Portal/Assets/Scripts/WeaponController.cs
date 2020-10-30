@@ -23,6 +23,11 @@ public class WeaponController : MonoBehaviour
     //public GameObject m_HitCollisionParticlesPrefab;
     public float m_MaxDistance = 150.0f;
 
+    [Header("Portals")]
+    public Portal m_BluePortal;
+    public Portal m_OrangePortal;
+    public GameObject m_DummyPortal;
+
     //[Header("Weapon Animation")]
     ////public Animator m_Animator;
 
@@ -35,32 +40,24 @@ public class WeaponController : MonoBehaviour
     private void Start()
     {
         m_ActualBulletsInMag = m_MaxMagSize;
+        m_BluePortal.gameObject.SetActive(false);
+        m_OrangePortal.gameObject.SetActive(false);
     }
 
     void Update()
     {
-        if (Input.GetMouseButton(0) && Time.time >= m_NextTimeToFire)
-        {
-            m_NextTimeToFire = Time.time + 1f / m_FireRate;
-            if (m_ActualBulletsInMag > 0)
-            {
-                Shoot();
-            }
-            else
-            {
-                if (m_GameController.m_Player.GetAmmo() > 0)
-                    StartCoroutine(Reloading());
-            }
+        if (Input.GetMouseButtonDown(0))
+        {         
+                Shoot(m_BluePortal);      
         }
 
-        //if (Input.GetKey(m_ReloadKey))
-        //{
-        //    if (m_Player.GetAmmo() > 0 && m_ActualBulletsInMag < m_MaxMagSize)
-        //        StartCoroutine(Reloading());
-        //}
+        if (Input.GetMouseButtonDown(1))
+        {
+            Shoot(m_OrangePortal);
+        }
     }
 
-    private void Shoot()
+    private void Shoot(Portal _Portal)
     {
         //m_Animator.SetTrigger("IsShooting");
         Ray l_Ray = m_Camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.0f));
@@ -88,6 +85,16 @@ public class WeaponController : MonoBehaviour
             //}
 
             //CreateShootHitParticle(l_RaycastHit.point, l_RaycastHit.normal, target != null, l_RaycastHit.transform.tag == "Terrain");
+            _Portal.gameObject.SetActive(true);
+            bool l_ValidPosition = _Portal.IsValidPosition(l_RaycastHit.point, l_RaycastHit.normal);
+            Debug.Log("l_ValidPosition " + l_ValidPosition);
+            if (!l_ValidPosition)
+            {
+                _Portal.gameObject.SetActive(false);
+                m_DummyPortal.transform.position = l_RaycastHit.point;
+                m_DummyPortal.transform.rotation = Quaternion.LookRotation(l_RaycastHit.normal);
+                m_DummyPortal.SetActive(true);
+            }
         }
 
         m_ActualBulletsInMag--;

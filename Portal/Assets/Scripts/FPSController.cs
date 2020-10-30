@@ -77,6 +77,7 @@ public class FPSController : MonoBehaviour
     //public AudioSource m_DamageSound;
     //public AudioSource m_ItemSound;
 
+
     #endregion
 
     private void Awake()
@@ -330,6 +331,12 @@ public class FPSController : MonoBehaviour
         //    if (other.name == "RespawnZone2Col")
         //        m_RespawnPoint = m_RespawnZone2;
         //}
+
+        if (other.tag == "Portal")
+        {
+            Teleport(other.GetComponent<Portal>());
+        }
+
     }
     public void KillPlayer()
     {
@@ -376,6 +383,20 @@ public class FPSController : MonoBehaviour
         //{
         RemoveLife(Damage);
         //}
+    }
+
+    void Teleport(Portal _Portal)
+    {
+        m_CharacterController.enabled = false;
+        Vector3 l_LocalPosition = _Portal.transform.InverseTransformPoint(transform.position);
+        transform.position = _Portal.m_MirrorPortal.transform.TransformPoint(l_LocalPosition);
+        m_CharacterController.enabled = true;
+
+        Vector3 l_LocalDirection = _Portal.transform.InverseTransformDirection(-transform.forward);
+        transform.forward = _Portal.m_MirrorPortal.transform.TransformDirection(l_LocalDirection);
+
+        m_Yaw = transform.rotation.eulerAngles.y;
+        m_Pitch = m_PitchController.rotation.eulerAngles.x;
     }
 
     #region Item Functions
