@@ -14,7 +14,13 @@ public class Portal : MonoBehaviour
     public float m_MaxDistanceToValidPoint = 500f;
     public float m_MinDot = 0.9f;
     public Material m_CameraRTMaterial;
+    public AnimationClip m_OpenPortal;
+    private Animation m_Animation;
 
+    private void Awake()
+    {
+        m_Animation = gameObject.GetComponent<Animation>();
+    }
     private void Start()
     {
         //Resolució de les cameras adaptativa
@@ -23,7 +29,7 @@ public class Portal : MonoBehaviour
             m_Camera.targetTexture.Release();
         }
         m_Camera.targetTexture = new RenderTexture(Screen.width, Screen.height, 24);
-        m_CameraRTMaterial.mainTexture = m_Camera.targetTexture;
+        m_CameraRTMaterial.mainTexture = m_Camera.targetTexture; 
     }
 
     void Update()
@@ -74,5 +80,9 @@ public class Portal : MonoBehaviour
         return l_IsValid;
     }
 
-
+    private void OnEnable()
+    {
+        m_Animation.clip = m_OpenPortal;
+        m_Animation.Play();
+    }
 }
