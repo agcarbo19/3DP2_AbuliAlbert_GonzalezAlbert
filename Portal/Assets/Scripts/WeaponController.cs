@@ -26,7 +26,9 @@ public class WeaponController : MonoBehaviour
     [Header("Portals")]
     public Portal m_BluePortal;
     public Portal m_OrangePortal;
-    public GameObject m_DummyPortal;
+    public GameObject m_BlueDummy;
+    public GameObject m_OrangeDummy;
+    public LayerMask m_PortalsLayerMask;
 
     //[Header("Weapon Animation")]
     ////public Animator m_Animator;
@@ -47,14 +49,11 @@ public class WeaponController : MonoBehaviour
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
-        {         
-                Shoot(m_BluePortal);      
-        }
+            Shoot(m_BluePortal);
 
         if (Input.GetMouseButtonDown(1))
-        {
             Shoot(m_OrangePortal);
-        }
+
     }
 
     private void Shoot(Portal _Portal)
@@ -62,85 +61,44 @@ public class WeaponController : MonoBehaviour
         //m_Animator.SetTrigger("IsShooting");
         Ray l_Ray = m_Camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.0f));
         RaycastHit l_RaycastHit;
+        bool l_ValidPosition = true;
         //m_ShootSound.Play();
         //m_WeaponFlash.Play();
 
-        if (Physics.Raycast(l_Ray, out l_RaycastHit, m_MaxDistance, m_ShootLayerMask.value))
+        //Comprova si el RaycastHit ja hi ha un portal.
+        if (Physics.Raycast(l_Ray, out l_RaycastHit, m_MaxDistance, m_PortalsLayerMask.value))
         {
-            //DroneEnemy target = l_RaycastHit.transform.GetComponent<DroneEnemy>();
-            //DummyTarget dummy = l_RaycastHit.transform.GetComponent<DummyTarget>();
-
-            //if (target != null)
-            //{
-            //    target.TakeDamage(m_Damage);
-            //}
-            //else if (dummy != null)
-            //{
-            //    dummy.m_isHit = true;
-            //}
-
-            //if (l_RaycastHit.rigidbody != null)
-            //{
-            //    l_RaycastHit.rigidbody.AddForce(-l_RaycastHit.normal * m_ImpactForce);
-            //}
-
-            //CreateShootHitParticle(l_RaycastHit.point, l_RaycastHit.normal, target != null, l_RaycastHit.transform.tag == "Terrain");
-            _Portal.gameObject.SetActive(true);
-            bool l_ValidPosition = _Portal.IsValidPosition(l_RaycastHit.point, l_RaycastHit.normal);
-            Debug.Log("l_ValidPosition " + l_ValidPosition);
-            if (!l_ValidPosition)
+            if (l_RaycastHit.transform.name != _Portal.transform.name)
             {
-                _Portal.gameObject.SetActive(false);
-                m_DummyPortal.transform.position = l_RaycastHit.point;
-                m_DummyPortal.transform.rotation = Quaternion.LookRotation(l_RaycastHit.normal);
-                m_DummyPortal.SetActive(true);
+                l_ValidPosition = false;
             }
         }
-
-        m_ActualBulletsInMag--;
-
-    }
-
-    IEnumerator Reloading()
-    {
-        //m_Animator.SetBool("IsReloading", true);
-        yield return new WaitForSeconds(1.5f);
-        //m_Animator.SetBool("IsReloading", false);
-        int l_nAmmo = m_MaxMagSize - m_ActualBulletsInMag;
-        if (l_nAmmo > m_GameController.m_Player.GetAmmo())
+        else if (Physics.Raycast(l_Ray, out l_RaycastHit, m_MaxDistance, m_ShootLayerMask.value))
         {
-            m_ActualBulletsInMag += m_GameController.m_Player.GetAmmo();
-            m_GameController.m_Player.RemoveAmmo(m_GameController.m_Player.GetAmmo());
+            _Portal.gameObject.SetActive(true);
+            l_ValidPosition = _Portal.IsValidPosition(l_RaycastHit.point, l_RaycastHit.normal);
+            //Debug.Log("l_ValidPosition " + l_ValidPosition);           
         }
-        else
+        if (!l_ValidPosition)
         {
-            m_ActualBulletsInMag += l_nAmmo;
-            m_GameController.m_Player.RemoveAmmo(l_nAmmo);
+            _Portal.gameObject.SetActive(false);
+
+            if (_Portal.name == "OrangePortal")
+            {
+                //m_OrangeDummy.transform.position = l_RaycastHit.point;
+                //m_OrangeDummy.transform.rotation = Quaternion.LookRotation(l_RaycastHit.normal);
+                ////m_OrangeDummy.SetActive(true);
+                Instantiate(m_OrangeDummy, l_RaycastHit.point, Quaternion.LookRotation(l_RaycastHit.normal));
+            }
+            if (_Portal.name == "BluePortal")
+            {
+                //m_BlueDummy.transform.position = l_RaycastHit.point;
+                //m_BlueDummy.transform.rotation = Quaternion.LookRotation(l_RaycastHit.normal);
+                //m_BlueDummy.SetActive(true);
+                Instantiate(m_BlueDummy, l_RaycastHit.point, Quaternion.LookRotation(l_RaycastHit.normal));
+            }
+
         }
 
-    }
-
-    private void CreateShootHitParticle(Vector3 Position, Vector3 Normal, bool target, bool terrain)
-    {
-        //if (target)
-        //{
-        //    GameObject.Instantiate(m_ImpactEffect, Position, Quaternion.LookRotation(Normal) * Quaternion.Euler(0.0f, 0.0f, UnityEngine.Random.value * 180.0f), m_GameController.m_DestroyObjects);
-        //}
-        //else
-        //{
-        //    GameObject.Instantiate(m_HitCollisionParticlesPrefab, Position, Quaternion.LookRotation(Normal) * Quaternion.Euler(0.0f, 0.0f, UnityEngine.Random.value * 180.0f), m_GameController.m_DestroyObjects);
-        //    if (terrain == false)
-        //    {
-        //        GameObject.Instantiate(m_ImpactEffect, Position, Quaternion.LookRotation(Normal) * Quaternion.Euler(0.0f, 0.0f, UnityEngine.Random.value * 180.0f), m_GameController.m_DestroyObjects);
-        //    }
-        //    else
-        //    {
-        //        GameObject.Instantiate(m_SmokeImpact, Position, Quaternion.LookRotation(Normal) * Quaternion.Euler(0.0f, 0.0f, UnityEngine.Random.value * 180.0f), m_GameController.m_DestroyObjects);
-        //    }
-        //}
-    }
-    public int GetBullets()
-    {
-        return m_ActualBulletsInMag;
     }
 }

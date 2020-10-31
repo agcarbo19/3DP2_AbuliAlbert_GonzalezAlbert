@@ -5,8 +5,10 @@ using TMPro;
 
 public class GameController : MonoBehaviour
 {
+    [Header("Controllers")]
     public FPSController m_Player;
     public WeaponController m_Weapon;
+
     //public List<DroneEnemy> m_Enemies;
     //public Transform m_DestroyObjects;
     //public AudioSource m_Music;

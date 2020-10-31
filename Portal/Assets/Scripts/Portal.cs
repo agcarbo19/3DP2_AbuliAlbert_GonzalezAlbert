@@ -13,10 +13,17 @@ public class Portal : MonoBehaviour
     public float m_MinDistanceToValidPoint = 0f;
     public float m_MaxDistanceToValidPoint = 500f;
     public float m_MinDot = 0.9f;
+    public Material m_CameraRTMaterial;
 
-    void Start()
+    private void Start()
     {
-
+        //Resolució de les cameras adaptativa
+        if (m_Camera.targetTexture != null)
+        {
+            m_Camera.targetTexture.Release();
+        }
+        m_Camera.targetTexture = new RenderTexture(Screen.width, Screen.height, 24);
+        m_CameraRTMaterial.mainTexture = m_Camera.targetTexture;
     }
 
     void Update()
@@ -39,7 +46,6 @@ public class Portal : MonoBehaviour
 
         foreach (Transform l_ValidPoint in m_ValidPoints)
         {
-            //m_Player -> WeaponController. S'ha de modificar!
             Vector3 l_Direction = l_ValidPoint.position - m_GameController.m_Player.m_Camera.transform.position;
             Ray l_Ray = new Ray(m_GameController.m_Player.m_Camera.transform.position, l_Direction);
 
@@ -68,5 +74,5 @@ public class Portal : MonoBehaviour
         return l_IsValid;
     }
 
-    
+
 }

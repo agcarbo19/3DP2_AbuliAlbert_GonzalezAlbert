@@ -228,11 +228,15 @@ MonoBehaviour:
   m_GameController: {fileID: 0}
   m_ShootLayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 55
   m_MaxDistance: 150
   m_BluePortal: {fileID: 0}
   m_OrangePortal: {fileID: 0}
-  m_DummyPortal: {fileID: 0}
+  m_BlueDummy: {fileID: 2870214365424543856, guid: 6c98b3bf8993e6547b9a402209a58834, type: 3}
+  m_OrangeDummy: {fileID: 5947801473909294862, guid: d89d824bbb7f7f241ad9cd2adfb9b7a5, type: 3}
+  m_PortalsLayerMask:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!1 &6485426093182334961
 GameObject:
   m_ObjectHideFlags: 0
@@ -494,7 +498,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 3639
+    m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
