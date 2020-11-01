@@ -2,17 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 public class FPSController : MonoBehaviour
 {
     #region Parameters
-    private float m_Yaw;
-    private float m_Pitch;
+    [Header("Controllers")]
     public CharacterController m_CharacterController;
     public GameController m_GameController;
 
     [Header("Camera")]
+    private float m_Yaw;
+    private float m_Pitch;
     public Camera m_Camera;
     public Transform m_PitchController;
     public float m_MinPitch = -35.0f;
@@ -29,15 +28,6 @@ public class FPSController : MonoBehaviour
     [Header("HUD")]
     public int m_Life;
     public int m_MaxLife = 100;
-    public int m_Ammo;
-    public int m_MaxAmmo = 200;
-    //public int m_Shield;
-    //public int m_MaxShield = 50;
-    //public TextMeshProUGUI m_TextAmmo;
-    //public TextMeshProUGUI m_TextLife;
-    //public TextMeshProUGUI m_TextShield;
-    //public TextMeshProUGUI m_TextScore;
-    //public TextMeshProUGUI m_TextDummyTime;
     //public GameObject m_GameOverCanv;
 
     [Header("Bools")]
@@ -77,7 +67,6 @@ public class FPSController : MonoBehaviour
     //public AudioSource m_DamageSound;
     //public AudioSource m_ItemSound;
 
-
     #endregion
 
     private void Awake()
@@ -93,8 +82,6 @@ public class FPSController : MonoBehaviour
         m_VerticalSpeed = 0.0f;
         Cursor.lockState = CursorLockMode.Locked;
         m_Life = m_MaxLife;
-        m_Ammo = m_MaxAmmo;
-        //m_Shield = m_MaxShield;
         //m_RespawnPoint = m_RespawnZone0;
     }
 
@@ -182,10 +169,6 @@ public class FPSController : MonoBehaviour
         #endregion
 
         #region Salto
-        //if (Input.GetKey(m_JumpKey) && m_TimeSinceLastGround < m_JumpThresholdSinceLastGround)
-        //{
-        //    m_VerticalSpeed = m_JumpSpeed;
-        //}
         if (Input.GetKeyDown(m_JumpKey) && m_OnGround == true)
         {
             isJumping = true;
@@ -221,18 +204,11 @@ public class FPSController : MonoBehaviour
 
         #endregion
 
-        //Normalizamos para arreglar la velocidad de diagonal
         l_Movement.Normalize();
 
         #region Bool IsMoving
-        if ((l_Movement.x != 0f || l_Movement.z != 0f) && m_OnGround == true)
-        {
-            m_IsMoving = true;
-        }
-        else
-        {
-            m_IsMoving = false;
-        }
+        m_IsMoving = ((l_Movement.x != 0f || l_Movement.z != 0f) && m_OnGround == true);
+
 
         ////Run Sounds
         //if (m_IsMoving)
@@ -247,8 +223,6 @@ public class FPSController : MonoBehaviour
         #endregion
 
         #region Correr-Sprint      
-        //Controlar si corremos o no
-
         float l_Speed = m_Speed;
         if (Input.GetKey(m_RunKeyCode))
         {
@@ -272,57 +246,26 @@ public class FPSController : MonoBehaviour
 
         m_TimeSinceLastGround += Time.deltaTime;
         if (m_OnGround)
-        {
             m_TimeSinceLastGround = 0.0f;
-        }
 
         //Si topamos con algo VerticalSpeed = 0
         if (m_OnGround || ((l_CollisionFlogs & CollisionFlags.CollidedAbove) != 0 && m_VerticalSpeed > 0.0f))
-        {
             m_VerticalSpeed = 0.0f;
-        }
+
         if (m_TimeSinceLastGround < m_JumpThresholdSinceLastGround)
             m_OnGround = true;
         #endregion
 
-        //#region HUD
-        //m_BloodScreen.color = new Color(1f, 0, 0, m_alphaBloodScreen);
-        //if (m_alphaBloodScreen > 0)
-        //{
-        //    m_alphaBloodScreen -= 1f * Time.deltaTime;
-        //}
-
-        //m_TextAmmo.text = m_GameController.m_Weapon.GetBullets().ToString() + " / " + m_Ammo.ToString();
-        //m_TextLife.text = m_Life.ToString() + " / " + m_MaxLife.ToString();
-        //m_TextShield.text = m_Shield.ToString() + " / " + m_MaxShield.ToString();
-
-        //#endregion
-
         if (m_Life <= 0)
-        {
             KillPlayer();
-        }
 
-        //if (m_GameOverCanv.activeSelf == true)
-        //{
-        //    if (Input.GetKey(m_JumpKey))
-        //    {
-        //        Retry();
-        //    }
-        //}
     }
 
     public void OnTriggerEnter(Collider other)
     {
-        //if (other.tag == "Item")
-        //{
-        //    other.GetComponent<Item>().Pick();
-        //}
 
         if (other.tag == "DeadZone")
-        {
             KillPlayer();
-        }
 
         //if (other.tag == "RespawnZone")
         //{
@@ -333,57 +276,11 @@ public class FPSController : MonoBehaviour
         //}
 
         if (other.tag == "Portal")
-        {
             Teleport(other.GetComponent<Portal>());
-        }
+
 
     }
-    public void KillPlayer()
-    {
-        m_Life = 0;
-        Time.timeScale = 0f;
-        //m_GameOverCanv.SetActive(true);
-    }
-
-    public void Retry()
-    {
-        Time.timeScale = 1f;
-        //StartCoroutine(m_GameController.RestartGame(m_RespawnPoint));
-        //m_GameOverCanv.SetActive(false);
-
-    }
-
-    public void RePatchPlayer()
-    {
-        //m_alphaBloodScreen = 0f;
-        m_Life = m_MaxLife;
-        m_Ammo = m_MaxAmmo;
-        //m_Shield = m_MaxShield;
-        m_GameController.m_Weapon.m_ActualBulletsInMag = m_GameController.m_Weapon.m_MaxMagSize;
-    }
-
-    public void HurtingPlayer(int Damage)
-    {
-        //m_alphaBloodScreen = 0.7f;
-        //m_DamageSound.Play();
-        //if (GetShield() > 0)
-        //{
-        //    if (GetShield() - (Damage * 0.75f) <= 0)
-        //    {
-        //        RemoveShield(GetShield());
-        //    }
-        //    else
-        //    {
-        //        RemoveShield((int)(Damage * 0.75f));
-        //    }
-
-        //    RemoveLife((int)(Damage * 0.25f));
-        //}
-        //else
-        //{
-        RemoveLife(Damage);
-        //}
-    }
+    public void KillPlayer() => m_Life = 0;
 
     void Teleport(Portal _Portal)
     {
@@ -399,54 +296,15 @@ public class FPSController : MonoBehaviour
         m_Pitch = m_PitchController.rotation.eulerAngles.x;
     }
 
-    #region Item Functions
+
     #region Get Set i Remove Life
-    public void AddLife(int LifePoints)
-    {
-        m_Life += LifePoints;
-    }
+    public void AddLife(int LifePoints) => m_Life += LifePoints;
     public int GetLife()
     {
         return m_Life;
     }
-    public void RemoveLife(int LifePoints)
-    {
-        m_Life -= LifePoints;
-    }
+    public void RemoveLife(int LifePoints) => m_Life -= LifePoints;
+
     #endregion
 
-    #region Get Set i Remove Ammo
-    public void AddAmmo(int AmmoRounds)
-    {
-        m_Ammo += AmmoRounds;
-    }
-
-    public void RemoveAmmo(int AmmoRounds)
-    {
-        m_Ammo -= AmmoRounds;
-    }
-
-    public int GetAmmo()
-    {
-        return m_Ammo;
-    }
-    #endregion
-
-    #region Get Set i Remove Shield
-    //public void AddShield(int ShieldPoints)
-    //{
-    //    m_Shield += ShieldPoints;
-    //}
-
-    //public int GetShield()
-    //{
-    //    return m_Shield;
-    //}
-
-    //public void RemoveShield(int ShieldPoints)
-    //{
-    //    m_Shield -= ShieldPoints;
-    //}
-    #endregion
-    #endregion
 }
