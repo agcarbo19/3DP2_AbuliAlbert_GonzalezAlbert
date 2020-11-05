@@ -293,7 +293,7 @@ public class FPSController : MonoBehaviour
         transform.forward = _Portal.m_MirrorPortal.transform.TransformDirection(l_LocalDirection);
 
         m_Yaw = transform.rotation.eulerAngles.y;
-        m_Pitch = m_PitchController.rotation.eulerAngles.x;
+        //m_Pitch = m_PitchController.rotation.eulerAngles.x;
     }
 
 
