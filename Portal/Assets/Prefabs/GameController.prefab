@@ -77,8 +77,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Player: {fileID: 0}
   m_Weapon: {fileID: 0}
-  m_BluePortal: {fileID: 5041787507648337834, guid: dafc6421ff736404a9ad926c37075d8a, type: 3}
-  m_OrangePortal: {fileID: 8149315214280633194, guid: 357669b4e9b43564ab10316e06c36046, type: 3}
+  m_BluePortal: {fileID: 0}
+  m_OrangePortal: {fileID: 0}
   m_CrosshairListSprites:
   - {fileID: 21300000, guid: f489249a30d2e0e4196b9d24b86ac0ba, type: 3}
   - {fileID: 21300000, guid: cc7037bba0a5f86459702197ec697a66, type: 3}
