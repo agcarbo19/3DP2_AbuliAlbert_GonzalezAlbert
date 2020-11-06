@@ -48,10 +48,10 @@ public class WeaponController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && m_GameController.m_Player.m_ObjectAttached == null)
             Shoot(m_BluePortal);
 
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1) && m_GameController.m_Player.m_ObjectAttached == null)
             Shoot(m_OrangePortal);
 
     }

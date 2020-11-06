@@ -55,6 +55,7 @@ public class FPSController : MonoBehaviour
     public KeyCode m_RunKeyCode = KeyCode.LeftShift;
     public KeyCode m_DebugLockAngleKeyCode = KeyCode.I;
     public KeyCode m_DebugLockKeyCode = KeyCode.O;
+    public KeyCode m_AttachObjectsKeyCode = KeyCode.E;
 
     //[Header("Respawn")]
     //public Transform m_RespawnPoint;
@@ -66,8 +67,18 @@ public class FPSController : MonoBehaviour
     //public AudioSource m_RunSound;
     //public AudioSource m_DamageSound;
     //public AudioSource m_ItemSound;
-
     #endregion
+
+    [Header("AttachObjects")]
+    public float m_ThrowObjectAttachedForce = 20.0f;
+    public float m_MaxDistanceToAttachObject = 4.0f;
+    public float m_AttachingObjectCurrentTime = 0.0f;
+    public float m_AttachingObjectTime = 1.0f;
+    public Transform m_AttachObjectTransform;
+    [HideInInspector] public GameObject m_ObjectAttached;
+    public bool m_AttachedObject = false;
+    public bool m_AttachingObject = false;
+    public LayerMask m_AttachObjectsLayerMask;
 
     private void Awake()
     {
@@ -256,9 +267,57 @@ public class FPSController : MonoBehaviour
             m_OnGround = true;
         #endregion
 
+        #region AttachObject
+        if (Input.GetKeyDown(m_AttachObjectsKeyCode) && m_ObjectAttached == null)
+            TryAttachObject();
+
+        if (m_ObjectAttached != null)
+            UpdateAttachObject();
+        #endregion
+
         if (m_Life <= 0)
             KillPlayer();
 
+    }
+
+    private void UpdateAttachObject()
+    {
+        if (m_AttachingObject)
+        {
+            m_AttachingObjectCurrentTime += Time.deltaTime;
+            float l_Pct = Mathf.Min(m_AttachingObjectCurrentTime / m_AttachingObjectTime, 1.0f);
+            m_ObjectAttached.transform.position = Vector3.Lerp(m_ObjectAttached.transform.position, m_AttachObjectTransform.position, l_Pct);
+            m_ObjectAttached.transform.rotation = Quaternion.Lerp(m_ObjectAttached.transform.rotation, m_AttachObjectTransform.rotation, l_Pct);
+
+            if (l_Pct == 1.0f)
+            {
+                m_AttachingObject = false;
+                m_AttachedObject = true;
+                m_ObjectAttached.transform.SetParent(m_AttachObjectTransform);
+            }
+
+        }
+        else if (m_AttachedObject)
+        {
+            if (Input.GetKeyDown(m_AttachObjectsKeyCode))
+            {
+                ThrowAttachedObject(0.0f);
+            }
+            else if (Input.GetMouseButtonDown(0))
+            {
+                ThrowAttachedObject(m_ThrowObjectAttachedForce);
+            }
+        }
+    }
+
+    private void ThrowAttachedObject(float Force)
+    {
+        m_ObjectAttached.GetComponent<Collider>().enabled = true;
+        m_ObjectAttached.transform.SetParent(null);
+        Rigidbody l_Rigidbody = m_ObjectAttached.GetComponent<Rigidbody>();
+        l_Rigidbody.isKinematic = false;
+        l_Rigidbody.AddForce(m_AttachObjectTransform.up * Force);
+        m_ObjectAttached = null;
     }
 
     public void OnTriggerEnter(Collider other)
@@ -278,7 +337,8 @@ public class FPSController : MonoBehaviour
         if (other.tag == "Portal")
             Teleport(other.GetComponent<Portal>());
 
-
+        if (other.tag == "CompanionSpawner")
+            other.GetComponent<CompanionSpawner>().Spawn();
     }
     public void KillPlayer() => m_Life = 0;
 
@@ -296,6 +356,25 @@ public class FPSController : MonoBehaviour
         //m_Pitch = m_PitchController.rotation.eulerAngles.x;
     }
 
+    void TryAttachObject()
+    {
+        Ray l_Ray = m_Camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.5f));
+        RaycastHit l_RaycastHit;
+        if (Physics.Raycast(l_Ray, out l_RaycastHit, m_MaxDistanceToAttachObject, m_AttachObjectsLayerMask))
+        {
+            if (l_RaycastHit.collider.tag == "Companion")
+                AttachObject(l_RaycastHit.collider);
+        }
+    }
+
+    void AttachObject(Collider _Collider)
+    {
+        m_AttachingObject = true;
+        m_ObjectAttached = _Collider.gameObject;
+        _Collider.enabled = false;
+        _Collider.GetComponent<Rigidbody>().isKinematic = true;
+        m_AttachingObjectCurrentTime = 0.0f;
+    }
 
     #region Get Set i Remove Life
     public void AddLife(int LifePoints) => m_Life += LifePoints;
