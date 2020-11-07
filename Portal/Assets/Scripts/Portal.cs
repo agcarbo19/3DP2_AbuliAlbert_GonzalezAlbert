@@ -16,6 +16,8 @@ public class Portal : MonoBehaviour
     public Material m_CameraRTMaterial;
     public AnimationClip m_OpenPortal;
     private Animation m_Animation;
+    public GameObject m_CylinderPortal;
+    public GameObject m_ValidPointsObject;
 
     private void Awake()
     {
@@ -41,12 +43,22 @@ public class Portal : MonoBehaviour
 
         float l_DistanceToPortal = Vector3.Distance(m_Camera.transform.position, transform.position);
         m_Camera.nearClipPlane = l_DistanceToPortal + m_CameraOffset;
+
+
+        if (!m_GameController.m_BluePortalActive || !m_GameController.m_OrangePortalActive)
+        {
+            m_CylinderPortal.SetActive(false);
+        }
+        else
+        {
+            m_CylinderPortal.SetActive(true);
+        }
     }
 
     public bool IsValidPosition(Vector3 Position, Vector3 Normal)
     {
-        transform.position = Position;
-        transform.rotation = Quaternion.LookRotation(Normal);
+        m_ValidPointsObject.transform.position = Position;
+        m_ValidPointsObject.transform.rotation = Quaternion.LookRotation(Normal);
         bool l_IsValid = true;
         RaycastHit l_RaycastHit;
 

@@ -14,8 +14,8 @@ public class GameController : MonoBehaviour
     [Header("Portals")]
     public GameObject m_BluePortal;
     public GameObject m_OrangePortal;
-    private bool m_BluePortalActive = false;
-    private bool m_OrangePortalActive = false;
+    public bool m_BluePortalActive = false;
+    public bool m_OrangePortalActive = false;
 
     [Header("Crosshair")]
     public List<Sprite> m_CrosshairListSprites;

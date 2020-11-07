@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Rendering.HybridV2;
 using UnityEngine;
 public class FPSController : MonoBehaviour
 {
@@ -75,10 +76,14 @@ public class FPSController : MonoBehaviour
     public float m_AttachingObjectCurrentTime = 0.0f;
     public float m_AttachingObjectTime = 1.0f;
     public Transform m_AttachObjectTransform;
-    [HideInInspector] public GameObject m_ObjectAttached;
+    [HideInInspector] public Companion m_ObjectAttached;
     public bool m_AttachedObject = false;
     public bool m_AttachingObject = false;
     public LayerMask m_AttachObjectsLayerMask;
+
+    [Header("Teleport")]
+    public float m_MaxDot = -0.7f;
+    public float m_MinDot = -1.1f;
 
     private void Awake()
     {
@@ -278,6 +283,77 @@ public class FPSController : MonoBehaviour
         if (m_Life <= 0)
             KillPlayer();
 
+
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+
+        if (other.tag == "DeadZone")
+            KillPlayer();
+
+        //if (other.tag == "RespawnZone")
+        //{
+        //    if (other.name == "RespawnZone1Col")
+        //        m_RespawnPoint = m_RespawnZone1;
+        //    if (other.name == "RespawnZone2Col")
+        //        m_RespawnPoint = m_RespawnZone2;
+        //}
+
+        if (other.tag == "Portal")
+        {
+            float l_Dot = Vector3.Dot(other.transform.forward, gameObject.transform.forward);
+            if (l_Dot < m_MaxDot && l_Dot > m_MinDot)
+                if (m_GameController.m_BluePortalActive && m_GameController.m_OrangePortalActive)
+                    Teleport(other.GetComponent<Portal>());
+        }
+
+        if (other.tag == "CompanionSpawner")
+            other.GetComponent<CompanionSpawner>().Spawn();
+    }
+    public void KillPlayer() => m_Life = 0;
+
+    void Teleport(Portal _Portal)
+    {
+        m_CharacterController.enabled = false;
+        Vector3 l_PitchDirection = _Portal.m_MirrorPortalTransform.InverseTransformDirection(m_PitchController.forward);
+
+        Vector3 l_LocalPosition = _Portal.transform.InverseTransformPoint(transform.position);
+        transform.position = _Portal.m_MirrorPortal.transform.TransformPoint(l_LocalPosition);
+
+        Vector3 l_LocalDirection = _Portal.transform.InverseTransformDirection(-transform.forward);
+        transform.forward = _Portal.m_MirrorPortal.transform.TransformDirection(l_LocalDirection);
+        m_Yaw = transform.rotation.eulerAngles.y;
+
+        l_PitchDirection = _Portal.m_MirrorPortal.transform.TransformDirection(l_PitchDirection);
+        m_PitchController.rotation = Quaternion.LookRotation(l_PitchDirection);
+        m_Pitch = Quaternion.LookRotation(l_PitchDirection).eulerAngles.x;
+
+        if (m_Pitch > 180.0f)
+            m_Pitch = m_Pitch - 360.0f;
+
+        m_CharacterController.enabled = true;
+    }
+
+    void TryAttachObject()
+    {
+        Ray l_Ray = m_Camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.5f));
+        RaycastHit l_RaycastHit;
+        if (Physics.Raycast(l_Ray, out l_RaycastHit, m_MaxDistanceToAttachObject, m_AttachObjectsLayerMask))
+        {
+            if (l_RaycastHit.collider.tag == "Companion")
+                AttachObject(l_RaycastHit.collider);
+        }
+    }
+
+    void AttachObject(Collider _Collider)
+    {
+        m_AttachingObject = true;
+        m_ObjectAttached = _Collider.GetComponent<Companion>();
+        m_ObjectAttached.SetTeleportable(false);
+        _Collider.enabled = false;
+        _Collider.GetComponent<Rigidbody>().isKinematic = true;
+        m_AttachingObjectCurrentTime = 0.0f;
     }
 
     private void UpdateAttachObject()
@@ -301,79 +377,26 @@ public class FPSController : MonoBehaviour
         {
             if (Input.GetKeyDown(m_AttachObjectsKeyCode))
             {
-                ThrowAttachedObject(0.0f);
+                StartCoroutine(ThrowAttachedObject(0.0f));
             }
             else if (Input.GetMouseButtonDown(0))
             {
-                ThrowAttachedObject(m_ThrowObjectAttachedForce);
+                StartCoroutine(ThrowAttachedObject(m_ThrowObjectAttachedForce));
             }
         }
     }
 
-    private void ThrowAttachedObject(float Force)
+    private IEnumerator ThrowAttachedObject(float Force)
     {
         m_ObjectAttached.GetComponent<Collider>().enabled = true;
         m_ObjectAttached.transform.SetParent(null);
         Rigidbody l_Rigidbody = m_ObjectAttached.GetComponent<Rigidbody>();
         l_Rigidbody.isKinematic = false;
         l_Rigidbody.AddForce(m_AttachObjectTransform.up * Force);
+        yield return new WaitForSeconds(0.2f);
+        m_AttachedObject = false;
+        m_ObjectAttached.SetTeleportable(true);
         m_ObjectAttached = null;
-    }
-
-    public void OnTriggerEnter(Collider other)
-    {
-
-        if (other.tag == "DeadZone")
-            KillPlayer();
-
-        //if (other.tag == "RespawnZone")
-        //{
-        //    if (other.name == "RespawnZone1Col")
-        //        m_RespawnPoint = m_RespawnZone1;
-        //    if (other.name == "RespawnZone2Col")
-        //        m_RespawnPoint = m_RespawnZone2;
-        //}
-
-        if (other.tag == "Portal")
-            Teleport(other.GetComponent<Portal>());
-
-        if (other.tag == "CompanionSpawner")
-            other.GetComponent<CompanionSpawner>().Spawn();
-    }
-    public void KillPlayer() => m_Life = 0;
-
-    void Teleport(Portal _Portal)
-    {
-        m_CharacterController.enabled = false;
-        Vector3 l_LocalPosition = _Portal.transform.InverseTransformPoint(transform.position);
-        transform.position = _Portal.m_MirrorPortal.transform.TransformPoint(l_LocalPosition);
-        m_CharacterController.enabled = true;
-
-        Vector3 l_LocalDirection = _Portal.transform.InverseTransformDirection(-transform.forward);
-        transform.forward = _Portal.m_MirrorPortal.transform.TransformDirection(l_LocalDirection);
-
-        m_Yaw = transform.rotation.eulerAngles.y;
-        //m_Pitch = m_PitchController.rotation.eulerAngles.x;
-    }
-
-    void TryAttachObject()
-    {
-        Ray l_Ray = m_Camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.5f));
-        RaycastHit l_RaycastHit;
-        if (Physics.Raycast(l_Ray, out l_RaycastHit, m_MaxDistanceToAttachObject, m_AttachObjectsLayerMask))
-        {
-            if (l_RaycastHit.collider.tag == "Companion")
-                AttachObject(l_RaycastHit.collider);
-        }
-    }
-
-    void AttachObject(Collider _Collider)
-    {
-        m_AttachingObject = true;
-        m_ObjectAttached = _Collider.gameObject;
-        _Collider.enabled = false;
-        _Collider.GetComponent<Rigidbody>().isKinematic = true;
-        m_AttachingObjectCurrentTime = 0.0f;
     }
 
     #region Get Set i Remove Life

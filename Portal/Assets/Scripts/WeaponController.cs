@@ -4,12 +4,6 @@ using UnityEngine;
 
 public class WeaponController : MonoBehaviour
 {
-    public float m_Damage = 10.0f;
-    public float m_FireRate = 15.0f;
-    public float m_ImpactForce = 30.0f;
-    public float m_NextTimeToFire = 0.0f;
-    public int m_MaxMagSize = 30;
-    public int m_ActualBulletsInMag;
 
     public Camera m_Camera;
     public GameController m_GameController;
@@ -28,7 +22,10 @@ public class WeaponController : MonoBehaviour
     public Portal m_OrangePortal;
     public GameObject m_BlueDummy;
     public GameObject m_OrangeDummy;
+    public GameObject m_PreviewPortal;
     public LayerMask m_PortalsLayerMask;
+    private Color m_PreviewColor;
+    private ParticleSystem.MainModule m_MainPreviewParticle;
 
     //[Header("Weapon Animation")]
     ////public Animator m_Animator;
@@ -41,19 +38,24 @@ public class WeaponController : MonoBehaviour
 
     private void Start()
     {
-        m_ActualBulletsInMag = m_MaxMagSize;
         m_BluePortal.gameObject.SetActive(false);
         m_OrangePortal.gameObject.SetActive(false);
+        m_PreviewPortal.gameObject.SetActive(false);
+        m_MainPreviewParticle = m_PreviewPortal.GetComponentInChildren<ParticleSystem>().main;
     }
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && m_GameController.m_Player.m_ObjectAttached == null)
+        if (Input.GetMouseButton(0) && m_GameController.m_Player.m_ObjectAttached == null)
+            PreviewPortal(m_BluePortal);
+        if (Input.GetMouseButtonUp(0) && m_GameController.m_Player.m_ObjectAttached == null)
             Shoot(m_BluePortal);
 
-        if (Input.GetMouseButtonDown(1) && m_GameController.m_Player.m_ObjectAttached == null)
-            Shoot(m_OrangePortal);
 
+        if (Input.GetMouseButton(1) && m_GameController.m_Player.m_ObjectAttached == null)
+            PreviewPortal(m_OrangePortal);
+        if (Input.GetMouseButtonUp(1) && m_GameController.m_Player.m_ObjectAttached == null)
+            Shoot(m_OrangePortal);
     }
 
     private void Shoot(Portal _Portal)
@@ -75,7 +77,6 @@ public class WeaponController : MonoBehaviour
         }
         else if (Physics.Raycast(l_Ray, out l_RaycastHit, m_MaxDistance, m_ShootLayerMask.value))
         {
-            _Portal.gameObject.SetActive(true);
             l_ValidPosition = _Portal.IsValidPosition(l_RaycastHit.point, l_RaycastHit.normal);
             //Debug.Log("l_ValidPosition " + l_ValidPosition);           
         }
@@ -99,6 +100,53 @@ public class WeaponController : MonoBehaviour
             }
 
         }
+        else
+        {
+            _Portal.gameObject.SetActive(true);
+            _Portal.transform.position = l_RaycastHit.point;
+            _Portal.transform.rotation = Quaternion.LookRotation(l_RaycastHit.normal);
+        }
+        m_PreviewPortal.SetActive(false);
+    }
+    private void PreviewPortal(Portal _Portal)
+    {
+
+        if (m_PreviewPortal.activeSelf == false)
+            m_PreviewPortal.SetActive(true);
+
+        Ray l_Ray = m_Camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.0f));
+        RaycastHit l_RaycastHit;
+        bool l_ValidPosition = true;
+
+        //Comprova si el RaycastHit ja hi ha un portal.
+        if (Physics.Raycast(l_Ray, out l_RaycastHit, m_MaxDistance, m_PortalsLayerMask.value))
+        {
+            if (l_RaycastHit.transform.name != _Portal.transform.name)
+            {
+                l_ValidPosition = false;
+            }
+        }
+        else 
+        if (Physics.Raycast(l_Ray, out l_RaycastHit, m_MaxDistance, m_ShootLayerMask.value))
+        {
+            l_ValidPosition = _Portal.IsValidPosition(l_RaycastHit.point, l_RaycastHit.normal);
+        }
+
+        if (!l_ValidPosition)
+        {
+            m_PreviewColor = Color.red;
+            m_PreviewColor.a = 0.1f;
+
+        }
+        else
+        {
+            m_PreviewColor = Color.green;
+            m_PreviewColor.a = 0.1f;
+        }
+
+        m_PreviewPortal.transform.position = l_RaycastHit.point;
+        m_PreviewPortal.transform.rotation = Quaternion.LookRotation(l_RaycastHit.normal);
+        m_MainPreviewParticle.startColor = m_PreviewColor;
 
     }
 }
