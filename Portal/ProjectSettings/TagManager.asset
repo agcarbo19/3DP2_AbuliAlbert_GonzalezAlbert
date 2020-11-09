@@ -9,6 +9,7 @@ TagManager:
   - CompanionSpawner
   - Companion
   - Cube
+  - EnemyTurret
   layers:
   - Default
   - TransparentFX

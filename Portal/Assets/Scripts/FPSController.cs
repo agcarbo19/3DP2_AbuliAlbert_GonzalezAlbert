@@ -291,7 +291,6 @@ public class FPSController : MonoBehaviour
         {
             m_alphaBloodScreen -= 1f * Time.deltaTime;
         }
-        Debug.Log(GetLife());
         #endregion
     }
 
@@ -360,7 +359,7 @@ public class FPSController : MonoBehaviour
         RaycastHit l_RaycastHit;
         if (Physics.Raycast(l_Ray, out l_RaycastHit, m_MaxDistanceToAttachObject, m_AttachObjectsLayerMask))
         {
-            if (l_RaycastHit.collider.tag == "Companion")
+            if (l_RaycastHit.collider.tag == "Companion" || l_RaycastHit.collider.tag == "EnemyTurret")
                 AttachObject(l_RaycastHit.collider);
         }
     }
@@ -389,9 +388,20 @@ public class FPSController : MonoBehaviour
                 m_AttachingObject = false;
                 m_AttachedObject = true;
                 m_ObjectAttached.transform.SetParent(m_AttachObjectTransform);
-                m_ObjectAttached.gameObject.layer = 9;
-                foreach (Transform _Child in m_ObjectAttached.transform)
-                    _Child.gameObject.layer = 9;
+                if (m_ObjectAttached.gameObject.layer != 9)
+                {
+                    m_ObjectAttached.gameObject.layer = 9;
+                    foreach (Transform _Child in m_ObjectAttached.transform)
+                        if (_Child.transform.childCount > 0)
+                        {
+                            foreach (Transform _GrandChild in _Child.transform)
+                            {
+                                _GrandChild.gameObject.layer = 9;
+                            }
+                        }
+                        else
+                            _Child.gameObject.layer = 9;
+                }
 
             }
 
@@ -415,7 +425,15 @@ public class FPSController : MonoBehaviour
         m_ObjectAttached.transform.SetParent(null);
         m_ObjectAttached.gameObject.layer = 0;
         foreach (Transform _Child in m_ObjectAttached.transform)
-            _Child.gameObject.layer = 0;
+            if (_Child.transform.childCount > 0)
+            {
+                foreach (Transform _GrandChild in _Child.transform)
+                {
+                    _GrandChild.gameObject.layer = 0;
+                }
+            }
+            else
+                _Child.gameObject.layer = 0;
 
         Rigidbody l_Rigidbody = m_ObjectAttached.GetComponent<Rigidbody>();
         l_Rigidbody.isKinematic = false;

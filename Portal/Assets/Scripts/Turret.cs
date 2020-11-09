@@ -7,15 +7,16 @@ public class Turret : MonoBehaviour
     public LineRenderer m_Laser;
     public float m_MaxDistance = 250f;
     public float m_DotLaserAlive = 0.86f;
-    public int m_BulletDamage = 20;
+    public int m_BulletDamage = 100;
     public float m_FireRate = 1.0f;
     public float m_NextTimeToFire = 0.0f;
+    public float m_ImpactForce = 30f;
     public LayerMask m_LayerMask;
     public AudioSource m_MachineGun;
 
     void Update()
     {
-        bool l_LaserAlive = Vector3.Dot(transform.up, Vector3.up) >= m_DotLaserAlive;
+        bool l_LaserAlive = Vector3.Dot(transform.forward, Vector3.up) >= m_DotLaserAlive;
         m_Laser.gameObject.SetActive(l_LaserAlive);
 
         if (l_LaserAlive)
@@ -27,14 +28,16 @@ public class Turret : MonoBehaviour
                 l_Distance = l_RaycastHit.distance;
             m_Laser.SetPosition(1, new Vector3(0.0f, 0.0f, l_Distance));
 
-            FPSController target = l_RaycastHit.transform.GetComponentInParent<FPSController>();
-            if (target != null)
+            Transform target = l_RaycastHit.transform;
+
+            if (target.GetComponentInParent<FPSController>() || target.tag == "EnemyTurret")
             {
                 if (Time.time >= m_NextTimeToFire)
                 {
                     m_NextTimeToFire = Time.time + 1f / m_FireRate;
-
                     Shoot(target);
+                    if (target.tag == "EnemyTurret")
+                        target.GetComponent<Rigidbody>().AddForce(-l_RaycastHit.normal * m_ImpactForce);
                 }
             }
         }
@@ -42,9 +45,18 @@ public class Turret : MonoBehaviour
 
     }
 
-    private void Shoot(FPSController _Target)
+    public void TakeDamage(int Damage)
+    {
+
+    }
+
+    private void Shoot(Transform _Target)
     {
         m_MachineGun.Play();
-        _Target.HurtingPlayer(m_BulletDamage);
+        if (_Target.GetComponentInParent<FPSController>())
+            _Target.GetComponentInParent<FPSController>().HurtingPlayer(m_BulletDamage);
+
+        if (_Target.tag == "EnemyTurret")
+            _Target.GetComponent<Turret>().TakeDamage(m_BulletDamage);
     }
 }
