@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Rendering.HybridV2;
 using UnityEngine;
+using UnityEngine.UI;
 public class FPSController : MonoBehaviour
 {
     #region Parameters
@@ -29,6 +30,8 @@ public class FPSController : MonoBehaviour
     [Header("HUD")]
     public int m_Life;
     public int m_MaxLife = 100;
+    public Image m_BloodScreen;
+    private float m_alphaBloodScreen = 0f;
     //public GameObject m_GameOverCanv;
 
     [Header("Bools")]
@@ -64,11 +67,9 @@ public class FPSController : MonoBehaviour
     //public Transform m_RespawnZone1;
     //public Transform m_RespawnZone2;
 
-    //[Header("Sounds")]
-    //public AudioSource m_RunSound;
-    //public AudioSource m_DamageSound;
-    //public AudioSource m_ItemSound;
-    #endregion
+    [Header("Sounds")]
+    public AudioSource m_DamageSound;
+
 
     [Header("AttachObjects")]
     public float m_ThrowObjectAttachedForce = 20.0f;
@@ -84,6 +85,7 @@ public class FPSController : MonoBehaviour
     [Header("Teleport")]
     public float m_MaxDot = -0.7f;
     public float m_MinDot = -1.1f;
+    #endregion
 
     private void Awake()
     {
@@ -283,6 +285,14 @@ public class FPSController : MonoBehaviour
         if (m_Life <= 0)
             KillPlayer();
 
+        #region HUD
+        m_BloodScreen.color = new Color(1f, 0, 0, m_alphaBloodScreen);
+        if (m_alphaBloodScreen > 0)
+        {
+            m_alphaBloodScreen -= 1f * Time.deltaTime;
+        }
+        Debug.Log(GetLife());
+        #endregion
     }
 
     public void OnTriggerEnter(Collider other)
@@ -300,7 +310,7 @@ public class FPSController : MonoBehaviour
         //}
 
         if (other.tag == "Portal")
-        {           
+        {
             float l_Dot = Vector3.Dot(gameObject.transform.forward, other.GetComponent<SubPortal>().m_PortalToPlayer.normalized);
             if (l_Dot > 0)
                 if (m_GameController.m_BluePortalActive && m_GameController.m_OrangePortalActive)
@@ -414,6 +424,14 @@ public class FPSController : MonoBehaviour
         m_AttachedObject = false;
         m_ObjectAttached.SetTeleportable(true);
         m_ObjectAttached = null;
+    }
+
+    public void HurtingPlayer(int Damage)
+    {
+        m_alphaBloodScreen = 0.7f;
+        m_DamageSound.Play();
+        RemoveLife(Damage);
+
     }
 
     #region Get Set i Remove Life
