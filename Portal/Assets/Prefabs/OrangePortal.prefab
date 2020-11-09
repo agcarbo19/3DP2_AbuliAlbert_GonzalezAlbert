@@ -180,9 +180,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8149315214280633197}
-  - component: {fileID: 8149315214280633196}
   - component: {fileID: 8149315214280633199}
   - component: {fileID: 8149315214280633198}
+  - component: {fileID: 5902830797765949315}
   m_Layer: 8
   m_Name: OrangePortal
   m_TagString: Portal
@@ -210,39 +210,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: -360}
---- !u!114 &8149315214280633196
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8149315214280633194}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5dc2fe7004de31c4e9d3556577107b47, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_MirrorPortal: {fileID: 0}
-  m_MirrorPortalTransform: {fileID: 8149315215593841790}
-  m_Camera: {fileID: 8149315214975544305}
-  m_GameController: {fileID: 0}
-  m_CameraOffset: 0.6
-  m_ValidPoints:
-  - {fileID: 8149315214514083071}
-  - {fileID: 8149315213724611135}
-  - {fileID: 8149315214358693123}
-  - {fileID: 8149315214756825657}
-  - {fileID: 8149315214246074727}
-  - {fileID: 8149315215119471899}
-  - {fileID: 8149315214907328585}
-  - {fileID: 8149315213986110679}
-  m_MinDistanceToValidPoint: 1.01
-  m_MaxDistanceToValidPoint: 1.31
-  m_MinDot: 0.9
-  m_CameraRTMaterial: {fileID: 2100000, guid: fbdaeaeeb41edbd4b94ea3a690c90fde, type: 2}
-  m_OpenPortal: {fileID: 7400000, guid: 292ea64a331a95546b1ac766734da59f, type: 2}
-  m_CylinderPortal: {fileID: 8149315213520905268}
-  m_ValidPointsObject: {fileID: 8149315214746133079}
 --- !u!65 &8149315214280633199
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -272,6 +239,38 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
+--- !u!114 &5902830797765949315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8149315214280633194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1c456f743dc712458899a808ed16366, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MirrorPortal: {fileID: 0}
+  m_MirrorPortalTransform: {fileID: 0}
+  m_Camera: {fileID: 0}
+  m_GameController: {fileID: 0}
+  m_CameraOffset: 0.6
+  m_ValidPoints: []
+  m_MinDistanceToValidPoint: 0
+  m_MaxDistanceToValidPoint: 500
+  m_MinDot: 0.9
+  m_CameraRTMaterial: {fileID: 0}
+  m_OpenPortal: {fileID: 0}
+  m_CylinderPortal: {fileID: 0}
+  m_ValidPointsObject: {fileID: 0}
+  m_MirrorPortal: {fileID: 0}
+  m_MirrorPortalTransform: {fileID: 0}
+  m_Camera: {fileID: 0}
+  m_CameraOffset: 0.6
+  m_CameraRTMaterial: {fileID: 0}
+  m_OpenPortal: {fileID: 0}
+  m_CylinderPortal: {fileID: 0}
 --- !u!1 &8149315214319888134
 GameObject:
   m_ObjectHideFlags: 0
@@ -5266,7 +5265,7 @@ MeshCollider:
   m_GameObject: {fileID: 8149315214581856235}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30

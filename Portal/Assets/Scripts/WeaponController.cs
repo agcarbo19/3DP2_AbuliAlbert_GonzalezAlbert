@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Animations;
 using UnityEngine;
 
 public class WeaponController : MonoBehaviour
@@ -18,14 +19,20 @@ public class WeaponController : MonoBehaviour
     public float m_MaxDistance = 150.0f;
 
     [Header("Portals")]
-    public Portal m_BluePortal;
-    public Portal m_OrangePortal;
+    public Portal m_PreviewPortal;
+    public SubPortal m_BluePortal;
+    public SubPortal m_OrangePortal;
     public GameObject m_BlueDummy;
     public GameObject m_OrangeDummy;
-    public GameObject m_PreviewPortal;
+    public bool m_ValidPosition;
+    //public GameObject m_PreviewPointsPortal;
+
     public LayerMask m_PortalsLayerMask;
     private Color m_PreviewColor;
     private ParticleSystem.MainModule m_MainPreviewParticle;
+    public float m_PortalSizeMultiplier = 1.1f;
+    public float m_MaxPortalSize = 2f;
+    public float m_MinPortalSize = 0.5f;
 
     //[Header("Weapon Animation")]
     ////public Animator m_Animator;
@@ -58,81 +65,59 @@ public class WeaponController : MonoBehaviour
             Shoot(m_OrangePortal);
     }
 
-    private void Shoot(Portal _Portal)
+    private void Shoot(SubPortal _Portal)
     {
         //m_Animator.SetTrigger("IsShooting");
-        Ray l_Ray = m_Camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.0f));
-        RaycastHit l_RaycastHit;
-        bool l_ValidPosition = true;
         //m_ShootSound.Play();
         //m_WeaponFlash.Play();
 
-        //Comprova si el RaycastHit ja hi ha un portal.
-        if (Physics.Raycast(l_Ray, out l_RaycastHit, m_MaxDistance, m_PortalsLayerMask.value))
-        {
-            if (l_RaycastHit.transform.name != _Portal.transform.name)
-            {
-                l_ValidPosition = false;
-            }
-        }
-        else if (Physics.Raycast(l_Ray, out l_RaycastHit, m_MaxDistance, m_ShootLayerMask.value))
-        {
-            l_ValidPosition = _Portal.IsValidPosition(l_RaycastHit.point, l_RaycastHit.normal);
-            //Debug.Log("l_ValidPosition " + l_ValidPosition);           
-        }
-        if (!l_ValidPosition)
+        if (!m_ValidPosition)
         {
             _Portal.gameObject.SetActive(false);
 
             if (_Portal.name == "OrangePortal")
             {
-                //m_OrangeDummy.transform.position = l_RaycastHit.point;
-                //m_OrangeDummy.transform.rotation = Quaternion.LookRotation(l_RaycastHit.normal);
-                ////m_OrangeDummy.SetActive(true);
-                Instantiate(m_OrangeDummy, l_RaycastHit.point, Quaternion.LookRotation(l_RaycastHit.normal));
+                Instantiate(m_OrangeDummy, m_PreviewPortal.transform.position, m_PreviewPortal.transform.rotation);
             }
             if (_Portal.name == "BluePortal")
             {
-                //m_BlueDummy.transform.position = l_RaycastHit.point;
-                //m_BlueDummy.transform.rotation = Quaternion.LookRotation(l_RaycastHit.normal);
-                //m_BlueDummy.SetActive(true);
-                Instantiate(m_BlueDummy, l_RaycastHit.point, Quaternion.LookRotation(l_RaycastHit.normal));
+                Instantiate(m_BlueDummy, m_PreviewPortal.transform.position, m_PreviewPortal.transform.rotation);
             }
-
         }
         else
         {
             _Portal.gameObject.SetActive(true);
-            _Portal.transform.position = l_RaycastHit.point;
-            _Portal.transform.rotation = Quaternion.LookRotation(l_RaycastHit.normal);
+            _Portal.transform.localScale = m_PreviewPortal.transform.localScale;
+            _Portal.GetComponentInChildren<ParticleSystem>().transform.localScale = m_PreviewPortal.GetComponentInChildren<ParticleSystem>().transform.localScale;
+            _Portal.transform.position = m_PreviewPortal.transform.position;
+            _Portal.transform.rotation = m_PreviewPortal.transform.rotation;
         }
-        m_PreviewPortal.SetActive(false);
+        m_PreviewPortal.gameObject.SetActive(false);
     }
-    private void PreviewPortal(Portal _Portal)
+    private void PreviewPortal(SubPortal _Portal)
     {
 
-        if (m_PreviewPortal.activeSelf == false)
-            m_PreviewPortal.SetActive(true);
+        if (m_PreviewPortal.gameObject.activeSelf == false)
+            m_PreviewPortal.gameObject.SetActive(true);
 
         Ray l_Ray = m_Camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.0f));
         RaycastHit l_RaycastHit;
-        bool l_ValidPosition = true;
 
         //Comprova si el RaycastHit ja hi ha un portal.
         if (Physics.Raycast(l_Ray, out l_RaycastHit, m_MaxDistance, m_PortalsLayerMask.value))
         {
             if (l_RaycastHit.transform.name != _Portal.transform.name)
             {
-                l_ValidPosition = false;
+                m_ValidPosition = false;
             }
         }
-        else 
+        else
         if (Physics.Raycast(l_Ray, out l_RaycastHit, m_MaxDistance, m_ShootLayerMask.value))
         {
-            l_ValidPosition = _Portal.IsValidPosition(l_RaycastHit.point, l_RaycastHit.normal);
+            m_ValidPosition = m_PreviewPortal.IsValidPosition(l_RaycastHit.point, l_RaycastHit.normal);
         }
 
-        if (!l_ValidPosition)
+        if (!m_ValidPosition)
         {
             m_PreviewColor = Color.red;
             m_PreviewColor.a = 0.1f;
@@ -142,6 +127,28 @@ public class WeaponController : MonoBehaviour
         {
             m_PreviewColor = Color.green;
             m_PreviewColor.a = 0.1f;
+        }
+
+        if (Input.mouseScrollDelta.y > 0)
+        {
+            if (m_PreviewPortal.transform.localScale.x < m_MaxPortalSize)
+            {
+                m_PreviewPortal.transform.localScale *= m_PortalSizeMultiplier;
+                m_PreviewPortal.GetComponentInChildren<ParticleSystem>().transform.localScale *= m_PortalSizeMultiplier;
+                m_PreviewPortal.m_MaxDistanceToValidPoint *= m_PortalSizeMultiplier;
+                m_PreviewPortal.m_MinDistanceToValidPoint *= m_PortalSizeMultiplier;
+            }
+        }
+        if (Input.mouseScrollDelta.y < 0)
+        {
+            if (m_PreviewPortal.transform.localScale.x > m_MinPortalSize)
+            {
+                m_PreviewPortal.transform.localScale /= m_PortalSizeMultiplier;
+                m_PreviewPortal.GetComponentInChildren<ParticleSystem>().transform.localScale /= m_PortalSizeMultiplier;
+                m_PreviewPortal.m_MaxDistanceToValidPoint /= m_PortalSizeMultiplier;
+                m_PreviewPortal.m_MinDistanceToValidPoint /= m_PortalSizeMultiplier;
+
+            }
         }
 
         m_PreviewPortal.transform.position = l_RaycastHit.point;

@@ -4,56 +4,12 @@ using UnityEngine;
 
 public class Portal : MonoBehaviour
 {
-    public Portal m_MirrorPortal;
-    public Transform m_MirrorPortalTransform;
-    public Camera m_Camera;
     public GameController m_GameController;
-    public float m_CameraOffset = 0.6f;
-    public List<Transform> m_ValidPoints;
-    public float m_MinDistanceToValidPoint = 0f;
-    public float m_MaxDistanceToValidPoint = 500f;
-    public float m_MinDot = 0.9f;
-    public Material m_CameraRTMaterial;
-    public AnimationClip m_OpenPortal;
-    private Animation m_Animation;
-    public GameObject m_CylinderPortal;
     public GameObject m_ValidPointsObject;
-
-    private void Awake()
-    {
-        m_Animation = gameObject.GetComponent<Animation>();
-    }
-    private void Start()
-    {
-        //Resolució de les cameras adaptativa
-        if (m_Camera.targetTexture != null)
-        {
-            m_Camera.targetTexture.Release();
-        }
-        m_Camera.targetTexture = new RenderTexture(Screen.width, Screen.height, 24);
-        m_CameraRTMaterial.mainTexture = m_Camera.targetTexture; 
-    }
-
-    void Update()
-    {
-        Vector3 l_LocalPosition = m_MirrorPortal.m_MirrorPortalTransform.InverseTransformPoint(m_GameController.m_Player.m_Camera.transform.position);
-        m_Camera.transform.position = transform.TransformPoint(l_LocalPosition);
-        Vector3 l_LocalDirection = m_MirrorPortal.m_MirrorPortalTransform.InverseTransformDirection(m_GameController.m_Player.m_Camera.transform.forward);
-        m_Camera.transform.forward = transform.TransformDirection(l_LocalDirection);
-
-        float l_DistanceToPortal = Vector3.Distance(m_Camera.transform.position, transform.position);
-        m_Camera.nearClipPlane = l_DistanceToPortal + m_CameraOffset;
-
-
-        if (!m_GameController.m_BluePortalActive || !m_GameController.m_OrangePortalActive)
-        {
-            m_CylinderPortal.SetActive(false);
-        }
-        else
-        {
-            m_CylinderPortal.SetActive(true);
-        }
-    }
+    public List<Transform> m_ValidPoints;
+    public float m_MinDistanceToValidPoint = 1.01f;
+    public float m_MaxDistanceToValidPoint = 1.31f;
+    public float m_MinDot = 0.9f;
 
     public bool IsValidPosition(Vector3 Position, Vector3 Normal)
     {
@@ -90,11 +46,5 @@ public class Portal : MonoBehaviour
                 l_IsValid = false;
         }
         return l_IsValid;
-    }
-
-    private void OnEnable()
-    {
-        m_Animation.clip = m_OpenPortal;
-        m_Animation.Play();
     }
 }

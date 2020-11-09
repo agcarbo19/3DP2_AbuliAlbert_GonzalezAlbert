@@ -305,7 +305,7 @@ public class FPSController : MonoBehaviour
             float l_Dot = Vector3.Dot(other.transform.forward, gameObject.transform.forward);
             if (l_Dot < m_MaxDot && l_Dot > m_MinDot)
                 if (m_GameController.m_BluePortalActive && m_GameController.m_OrangePortalActive)
-                    Teleport(other.GetComponent<Portal>());
+                    Teleport(other.GetComponent<SubPortal>());
         }
 
         if (other.tag == "CompanionSpawner")
@@ -313,7 +313,7 @@ public class FPSController : MonoBehaviour
     }
     public void KillPlayer() => m_Life = 0;
 
-    void Teleport(Portal _Portal)
+    void Teleport(SubPortal _Portal)
     {
         m_CharacterController.enabled = false;
         Vector3 l_PitchDirection = _Portal.m_MirrorPortalTransform.InverseTransformDirection(m_PitchController.forward);
