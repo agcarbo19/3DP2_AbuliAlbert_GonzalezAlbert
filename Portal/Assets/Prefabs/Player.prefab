@@ -254,14 +254,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 55
   m_MaxDistance: 150
+  m_PreviewPortal: {fileID: 0}
   m_BluePortal: {fileID: 0}
   m_OrangePortal: {fileID: 0}
   m_BlueDummy: {fileID: 2870214365424543856, guid: 6c98b3bf8993e6547b9a402209a58834, type: 3}
   m_OrangeDummy: {fileID: 5947801473909294862, guid: d89d824bbb7f7f241ad9cd2adfb9b7a5, type: 3}
-  m_PreviewPortal: {fileID: 0}
+  m_ValidPosition: 0
   m_PortalsLayerMask:
     serializedVersion: 2
     m_Bits: 256
+  m_PortalSizeMultiplier: 1.1
+  m_MaxPortalSize: 2
+  m_MinPortalSize: 0.5
 --- !u!1 &6485426093182334961
 GameObject:
   m_ObjectHideFlags: 0

@@ -2955,11 +2955,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c676e33ec444c49459c21286695a05e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &283566535 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8149315213520905268, guid: 357669b4e9b43564ab10316e06c36046, type: 3}
-  m_PrefabInstance: {fileID: 1739469835}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &289199454 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100004, guid: 5718ba0d86b07c4428af67cbd37bcfd2, type: 3}
@@ -4374,11 +4369,6 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!20 &401129430 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 8149315214975544305, guid: 357669b4e9b43564ab10316e06c36046, type: 3}
-  m_PrefabInstance: {fileID: 1739469835}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &401286153
 GameObject:
   m_ObjectHideFlags: 0
@@ -4855,11 +4845,6 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!4 &438991606 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5041787507782090715, guid: dafc6421ff736404a9ad926c37075d8a, type: 3}
-  m_PrefabInstance: {fileID: 2088608705}
-  m_PrefabAsset: {fileID: 0}
 --- !u!43 &454850845
 Mesh:
   m_ObjectHideFlags: 0
@@ -6640,11 +6625,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 5718ba0d86b07c4428af67cbd37bcfd2, type: 3}
   m_PrefabInstance: {fileID: 1601128475}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &733102300 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5041787508426714769, guid: dafc6421ff736404a9ad926c37075d8a, type: 3}
-  m_PrefabInstance: {fileID: 2088608705}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &761490114
 GameObject:
   m_ObjectHideFlags: 0
@@ -6957,11 +6937,6 @@ Transform:
   m_Father: {fileID: 22835647}
   m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &779767709 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3283328324230559208, guid: 8b65e079a94b6c847a865f9c34ba007f, type: 3}
-  m_PrefabInstance: {fileID: 76307581}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &808926489
 GameObject:
   m_ObjectHideFlags: 0
@@ -11513,6 +11488,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 6485426093136048901, guid: 597fdf19d1d342c41a883d92f88fd6b5, type: 3}
+      propertyPath: m_GameController
+      value: 
+      objectReference: {fileID: 1646046284}
+    - target: {fileID: 6485426093136048901, guid: 597fdf19d1d342c41a883d92f88fd6b5, type: 3}
+      propertyPath: m_PreviewPortal
+      value: 
+      objectReference: {fileID: 374678323}
+    - target: {fileID: 6485426093136048901, guid: 597fdf19d1d342c41a883d92f88fd6b5, type: 3}
       propertyPath: m_BluePortal
       value: 
       objectReference: {fileID: 1791554344}
@@ -11520,18 +11503,6 @@ PrefabInstance:
       propertyPath: m_OrangePortal
       value: 
       objectReference: {fileID: 261254481}
-    - target: {fileID: 6485426093136048901, guid: 597fdf19d1d342c41a883d92f88fd6b5, type: 3}
-      propertyPath: m_PreviewPortal
-      value: 
-      objectReference: {fileID: 374678323}
-    - target: {fileID: 6485426093136048901, guid: 597fdf19d1d342c41a883d92f88fd6b5, type: 3}
-      propertyPath: m_GameController
-      value: 
-      objectReference: {fileID: 1646046284}
-    - target: {fileID: 6485426093136048901, guid: 597fdf19d1d342c41a883d92f88fd6b5, type: 3}
-      propertyPath: m_PreviewPointsPortal
-      value: 
-      objectReference: {fileID: 779767709}
     - target: {fileID: 6485426093723334458, guid: 597fdf19d1d342c41a883d92f88fd6b5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 24
@@ -15519,11 +15490,6 @@ Transform:
   m_Father: {fileID: 22835647}
   m_RootOrder: 25
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!20 &1726131100 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 5041787507441796163, guid: dafc6421ff736404a9ad926c37075d8a, type: 3}
-  m_PrefabInstance: {fileID: 2088608705}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1737718293
 GameObject:
   m_ObjectHideFlags: 0
@@ -15847,38 +15813,10 @@ PrefabInstance:
       propertyPath: m_MirrorPortal
       value: 
       objectReference: {fileID: 1791554344}
-    - target: {fileID: 5902830797765949315, guid: 357669b4e9b43564ab10316e06c36046, type: 3}
-      propertyPath: m_MirrorPortalTransform
-      value: 
-      objectReference: {fileID: 1933030219}
-    - target: {fileID: 5902830797765949315, guid: 357669b4e9b43564ab10316e06c36046, type: 3}
-      propertyPath: m_Camera
-      value: 
-      objectReference: {fileID: 401129430}
-    - target: {fileID: 5902830797765949315, guid: 357669b4e9b43564ab10316e06c36046, type: 3}
-      propertyPath: m_CameraRTMaterial
-      value: 
-      objectReference: {fileID: 2100000, guid: fbdaeaeeb41edbd4b94ea3a690c90fde, type: 2}
-    - target: {fileID: 5902830797765949315, guid: 357669b4e9b43564ab10316e06c36046, type: 3}
-      propertyPath: m_OpenPortal
-      value: 
-      objectReference: {fileID: 7400000, guid: 292ea64a331a95546b1ac766734da59f, type: 2}
-    - target: {fileID: 5902830797765949315, guid: 357669b4e9b43564ab10316e06c36046, type: 3}
-      propertyPath: m_CylinderPortal
-      value: 
-      objectReference: {fileID: 283566535}
     - target: {fileID: 8149315214280633194, guid: 357669b4e9b43564ab10316e06c36046, type: 3}
       propertyPath: m_Name
       value: OrangePortal
       objectReference: {fileID: 0}
-    - target: {fileID: 8149315214280633196, guid: 357669b4e9b43564ab10316e06c36046, type: 3}
-      propertyPath: m_MirrorPortal
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8149315214280633196, guid: 357669b4e9b43564ab10316e06c36046, type: 3}
-      propertyPath: m_GameController
-      value: 
-      objectReference: {fileID: 1646046284}
     - target: {fileID: 8149315214280633197, guid: 357669b4e9b43564ab10316e06c36046, type: 3}
       propertyPath: m_LocalPosition.x
       value: -16.185595
@@ -22453,11 +22391,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 5718ba0d86b07c4428af67cbd37bcfd2, type: 3}
   m_PrefabInstance: {fileID: 1523076852}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1933030219 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8149315215593841790, guid: 357669b4e9b43564ab10316e06c36046, type: 3}
-  m_PrefabInstance: {fileID: 1739469835}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1942888761
 GameObject:
   m_ObjectHideFlags: 0
@@ -23482,14 +23415,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: BluePortal
       objectReference: {fileID: 0}
-    - target: {fileID: 5041787507648337836, guid: dafc6421ff736404a9ad926c37075d8a, type: 3}
-      propertyPath: m_MirrorPortal
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5041787507648337836, guid: dafc6421ff736404a9ad926c37075d8a, type: 3}
-      propertyPath: m_GameController
-      value: 
-      objectReference: {fileID: 1646046284}
     - target: {fileID: 5041787507648337837, guid: dafc6421ff736404a9ad926c37075d8a, type: 3}
       propertyPath: m_LocalPosition.x
       value: -9.02
@@ -23538,26 +23463,6 @@ PrefabInstance:
       propertyPath: m_MirrorPortal
       value: 
       objectReference: {fileID: 261254481}
-    - target: {fileID: 6209967265628847175, guid: dafc6421ff736404a9ad926c37075d8a, type: 3}
-      propertyPath: m_MirrorPortalTransform
-      value: 
-      objectReference: {fileID: 438991606}
-    - target: {fileID: 6209967265628847175, guid: dafc6421ff736404a9ad926c37075d8a, type: 3}
-      propertyPath: m_Camera
-      value: 
-      objectReference: {fileID: 1726131100}
-    - target: {fileID: 6209967265628847175, guid: dafc6421ff736404a9ad926c37075d8a, type: 3}
-      propertyPath: m_CameraRTMaterial
-      value: 
-      objectReference: {fileID: 2100000, guid: df2d8b60b0ce9c84ab864cb0bcd5d9ed, type: 2}
-    - target: {fileID: 6209967265628847175, guid: dafc6421ff736404a9ad926c37075d8a, type: 3}
-      propertyPath: m_OpenPortal
-      value: 
-      objectReference: {fileID: 7400000, guid: db7007f4a3e582540925af6acf6d00be, type: 2}
-    - target: {fileID: 6209967265628847175, guid: dafc6421ff736404a9ad926c37075d8a, type: 3}
-      propertyPath: m_CylinderPortal
-      value: 
-      objectReference: {fileID: 733102300}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dafc6421ff736404a9ad926c37075d8a, type: 3}
 --- !u!43 &2097167121

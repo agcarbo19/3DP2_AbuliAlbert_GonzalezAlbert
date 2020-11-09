@@ -17,18 +17,13 @@ public class Companion : MonoBehaviour
     {
         if (other.tag == "Portal")
         {
-            Teleport(other.GetComponent<SubPortal>());
+            gameObject.GetComponent<Collider>().enabled = false;
+            StartCoroutine(Teleport(other.GetComponent<SubPortal>()));
         }
     }
 
-    private void Update()
+    IEnumerator Teleport(SubPortal _Portal)
     {
-        gameObject.GetComponent<BoxCollider>().enabled = !m_Rigidbody.isKinematic;
-    }
-
-    void Teleport(SubPortal _Portal)
-    {
-        m_Rigidbody.isKinematic = true;
         Vector3 l_LocalVelocity = _Portal.m_MirrorPortalTransform.InverseTransformDirection(m_Rigidbody.velocity);
         
         Vector3 l_LocalPosition = _Portal.transform.InverseTransformPoint(transform.position);
@@ -42,8 +37,8 @@ public class Companion : MonoBehaviour
 
         m_Rigidbody.velocity = _Portal.m_MirrorPortal.transform.TransformDirection(l_LocalVelocity);
 
-        m_Rigidbody.isKinematic = false;
-
+        yield return new WaitForSeconds(0.2f);
+        gameObject.GetComponent<Collider>().enabled = true;
     }
 
     public void SetTeleportable(bool _Teleportable)
