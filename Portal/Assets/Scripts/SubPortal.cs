@@ -13,6 +13,7 @@ public class SubPortal : MonoBehaviour
     public Material m_CameraRTMaterial;
     public AnimationClip m_OpenPortal;
     private Animation m_Animation;
+    public Vector3 m_PortalToPlayer = new Vector3(0f,0f,0f);
 
     private void Awake()
     {
@@ -48,6 +49,9 @@ public class SubPortal : MonoBehaviour
         {
             m_CylinderPortal.SetActive(true);
         }
+        m_PortalToPlayer = gameObject.transform.position - m_GameController.m_Player.transform.position;
+        //m_PortalToPlayer.Normalize();
+        //Debug.Log(gameObject.transform.name + " " + m_PortalToPlayer);
     }
 
     private void OnEnable()

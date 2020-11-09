@@ -283,7 +283,6 @@ public class FPSController : MonoBehaviour
         if (m_Life <= 0)
             KillPlayer();
 
-
     }
 
     public void OnTriggerEnter(Collider other)
@@ -301,21 +300,31 @@ public class FPSController : MonoBehaviour
         //}
 
         if (other.tag == "Portal")
-        {
-            float l_Dot = Vector3.Dot(other.transform.forward, gameObject.transform.forward);
-            if (l_Dot < m_MaxDot && l_Dot > m_MinDot)
+        {           
+            float l_Dot = Vector3.Dot(gameObject.transform.forward, other.GetComponent<SubPortal>().m_PortalToPlayer.normalized);
+            if (l_Dot > 0)
                 if (m_GameController.m_BluePortalActive && m_GameController.m_OrangePortalActive)
+                {
+                    m_CharacterController.enabled = false;
                     Teleport(other.GetComponent<SubPortal>());
+                }
         }
 
         if (other.tag == "CompanionSpawner")
             other.GetComponent<CompanionSpawner>().Spawn();
     }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Portal")
+            m_CharacterController.enabled = true;
+
+    }
+
     public void KillPlayer() => m_Life = 0;
 
     void Teleport(SubPortal _Portal)
     {
-        m_CharacterController.enabled = false;
         Vector3 l_PitchDirection = _Portal.m_MirrorPortalTransform.InverseTransformDirection(m_PitchController.forward);
 
         Vector3 l_LocalPosition = _Portal.transform.InverseTransformPoint(transform.position);
@@ -370,6 +379,10 @@ public class FPSController : MonoBehaviour
                 m_AttachingObject = false;
                 m_AttachedObject = true;
                 m_ObjectAttached.transform.SetParent(m_AttachObjectTransform);
+                m_ObjectAttached.gameObject.layer = 9;
+                foreach (Transform _Child in m_ObjectAttached.transform)
+                    _Child.gameObject.layer = 9;
+
             }
 
         }
@@ -390,6 +403,10 @@ public class FPSController : MonoBehaviour
     {
         m_ObjectAttached.GetComponent<Collider>().enabled = true;
         m_ObjectAttached.transform.SetParent(null);
+        m_ObjectAttached.gameObject.layer = 0;
+        foreach (Transform _Child in m_ObjectAttached.transform)
+            _Child.gameObject.layer = 0;
+
         Rigidbody l_Rigidbody = m_ObjectAttached.GetComponent<Rigidbody>();
         l_Rigidbody.isKinematic = false;
         l_Rigidbody.AddForce(m_AttachObjectTransform.up * Force);
