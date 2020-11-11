@@ -14,7 +14,7 @@ public class Button : MonoBehaviour
         {
             transform.position = new Vector3(transform.position.x, transform.position.y - 0.2f, transform.position.z);
             m_ButtonDown.Play();
-            m_ActionGameObject.GetComponent<FlipPanel>().m_InAction = true;
+            m_ActionGameObject.GetComponent<ButtonAction>().m_InAction = true;
         }
     }
 

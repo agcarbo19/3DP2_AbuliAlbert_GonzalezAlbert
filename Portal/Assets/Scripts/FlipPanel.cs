@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using UnityEngine;
 
-public class FlipPanel : MonoBehaviour
+public class FlipPanel : ButtonAction
 {
-    public bool m_InAction;
     private Vector3 m_PanelFlip = new Vector3(0f, 180f, 0f);
     private Vector3 m_CurrentAngle;
     private Vector3 m_InitialAngle;
