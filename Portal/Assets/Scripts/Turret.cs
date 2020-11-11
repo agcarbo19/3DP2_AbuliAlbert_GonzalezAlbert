@@ -30,7 +30,7 @@ public class Turret : MonoBehaviour
 
             Transform target = l_RaycastHit.transform;
 
-            if (target.GetComponentInParent<FPSController>() || target.tag == "EnemyTurret")
+            if (target.tag == "Player" || target.tag == "EnemyTurret")
             {
                 if (Time.time >= m_NextTimeToFire)
                 {

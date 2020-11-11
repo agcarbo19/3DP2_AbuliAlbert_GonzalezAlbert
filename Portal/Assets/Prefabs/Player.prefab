@@ -516,7 +516,7 @@ GameObject:
   - component: {fileID: 8493739205563140713}
   m_Layer: 11
   m_Name: Renderer
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

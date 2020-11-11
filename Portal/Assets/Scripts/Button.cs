@@ -10,9 +10,9 @@ public class Button : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponentInParent<FPSController>())
+        if (other.GetComponentInParent<FPSController>() || other.tag == "Companion")
         {
-            transform.position = new Vector3(transform.position.x, transform.position.y - 0.1f, transform.position.z);
+            transform.position = new Vector3(transform.position.x, transform.position.y - 0.2f, transform.position.z);
             m_ButtonDown.Play();
             m_ActionGameObject.GetComponent<FlipPanel>().m_InAction = true;
         }
@@ -20,9 +20,9 @@ public class Button : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.GetComponentInParent<FPSController>())
+        if (other.GetComponentInParent<FPSController>() || other.tag == "Companion")
         {
-            transform.position = new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z);
+            transform.position = new Vector3(transform.position.x, transform.position.y + 0.2f, transform.position.z);
             m_ButtonUp.Play();
             m_ActionGameObject.GetComponent<FlipPanel>().m_InAction = false;
         }

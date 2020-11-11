@@ -314,6 +314,8 @@ public class FPSController : MonoBehaviour
             if (l_Dot > 0)
                 if (m_GameController.m_BluePortalActive && m_GameController.m_OrangePortalActive)
                 {
+                    if (m_AttachedObject)
+                        m_ObjectAttached.GetComponent<Collider>().enabled = false;
                     m_CharacterController.enabled = false;
                     Teleport(other.GetComponent<SubPortal>());
                 }
@@ -351,6 +353,8 @@ public class FPSController : MonoBehaviour
             m_Pitch = m_Pitch - 360.0f;
 
         m_CharacterController.enabled = true;
+        if (m_AttachedObject)
+            m_ObjectAttached.GetComponent<Collider>().enabled = true;
     }
 
     void TryAttachObject()
@@ -369,7 +373,7 @@ public class FPSController : MonoBehaviour
         m_AttachingObject = true;
         m_ObjectAttached = _Collider.GetComponent<Companion>();
         m_ObjectAttached.SetTeleportable(false);
-        _Collider.enabled = false;
+        //_Collider.enabled = false;
         _Collider.GetComponent<Rigidbody>().isKinematic = true;
         m_AttachingObjectCurrentTime = 0.0f;
     }

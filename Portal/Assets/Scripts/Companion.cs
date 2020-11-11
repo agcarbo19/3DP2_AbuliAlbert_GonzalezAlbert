@@ -7,25 +7,30 @@ public class Companion : MonoBehaviour
 {
     private bool m_Teleportable = true;
     private Rigidbody m_Rigidbody;
+    private GameController m_GameController;
 
     private void Awake()
     {
         m_Rigidbody = GetComponent<Rigidbody>();
+        m_GameController = FindObjectOfType<GameController>();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Portal")
+        if (!m_GameController.m_Player.m_AttachedObject)
         {
-            gameObject.GetComponent<Collider>().enabled = false;
-            StartCoroutine(Teleport(other.GetComponent<SubPortal>()));
+            if (other.tag == "Portal")
+            {
+                gameObject.GetComponent<Collider>().enabled = false;
+                StartCoroutine(Teleport(other.GetComponent<SubPortal>()));
+            }
         }
     }
 
     IEnumerator Teleport(SubPortal _Portal)
     {
         Vector3 l_LocalVelocity = _Portal.m_MirrorPortalTransform.InverseTransformDirection(m_Rigidbody.velocity);
-        
+
         Vector3 l_LocalPosition = _Portal.transform.InverseTransformPoint(transform.position);
         transform.position = _Portal.m_MirrorPortal.transform.TransformPoint(l_LocalPosition);
 
