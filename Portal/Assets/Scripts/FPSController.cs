@@ -444,8 +444,8 @@ public class FPSController : MonoBehaviour
         Rigidbody l_Rigidbody = m_ObjectAttached.GetComponent<Rigidbody>();
         l_Rigidbody.isKinematic = false;
         l_Rigidbody.AddForce(m_AttachObjectTransform.up * Force);
-        yield return new WaitForSeconds(0.2f);
         m_AttachedObject = false;
+        yield return new WaitForSeconds(0.2f);
         m_ObjectAttached.SetTeleportable(true);
         m_ObjectAttached = null;
     }
