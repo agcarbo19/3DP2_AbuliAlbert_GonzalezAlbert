@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Runtime.Remoting.Messaging;
 
 public class GameController : MonoBehaviour
 {
@@ -20,29 +21,29 @@ public class GameController : MonoBehaviour
     [Header("Crosshair")]
     public List<Sprite> m_CrosshairListSprites;
     public Image m_Crosshair;
-    //public List<DroneEnemy> m_Enemies;
-    //public Transform m_DestroyObjects;
-    //public AudioSource m_Music;
+
+    [Header("GameOver")]
+    public GameObject m_GameOverPanel;
 
     private void Start()
     {
-        //m_Enemies.Add(FindObjectOfType<DroneEnemy>());
         if (m_CrosshairListSprites.Count > 0)
             m_Crosshair.sprite = m_CrosshairListSprites[0];
-
+        m_GameOverPanel.SetActive(false);
+     
     }
 
     private void Update()
     {
         m_BluePortalActive = m_BluePortal.activeSelf;
         m_OrangePortalActive = m_OrangePortal.activeSelf;
-        //if (m_GameOverCanv.activeSelf == true)
-        //{
-        //    if (Input.GetKey(m_JumpKey))
-        //    {
-        //        Retry();
-        //    }
-        //}
+        if (m_GameOverPanel.activeSelf == true)
+        {
+            if (Input.GetKey(KeyCode.Space))
+            {
+                Retry();
+            }
+        }
 
         #region HUD Crosshair
         if (!m_BluePortalActive && !m_OrangePortalActive)
@@ -64,26 +65,27 @@ public class GameController : MonoBehaviour
         #endregion
     }
 
-    public IEnumerator RestartGame(Transform RespawnPoint)
+    public void RestartGame(Transform RespawnPoint)
     {
+        m_Player.m_CharacterController.enabled = false;
+        m_Player.RePatchPlayer();
         m_Player.transform.position = RespawnPoint.position;
-        yield return new WaitForSeconds(.5f);
-        //m_Player.RePatchPlayer();
+        m_Player.transform.rotation = RespawnPoint.rotation;
+        m_Player.m_CharacterController.enabled = true;
         //m_Music.Play();
-
     }
 
     public void GameOver()
     {
         Time.timeScale = 0f;
+        m_GameOverPanel.SetActive(true);
     }
 
     public void Retry()
     {
         Time.timeScale = 1f;
-        //StartCoroutine(m_GameController.RestartGame(m_RespawnPoint));
-        //m_GameOverCanv.SetActive(false);
-
+        m_GameOverPanel.SetActive(false);
+        RestartGame(m_Player.m_RespawnPoint);
     }
 
 

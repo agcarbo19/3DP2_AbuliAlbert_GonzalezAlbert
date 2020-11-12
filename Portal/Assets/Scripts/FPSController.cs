@@ -32,7 +32,6 @@ public class FPSController : MonoBehaviour
     public int m_MaxLife = 100;
     public Image m_BloodScreen;
     private float m_alphaBloodScreen = 0f;
-    //public GameObject m_GameOverCanv;
 
     [Header("Bools")]
     public bool m_InvertVerticalAxis = true;
@@ -61,11 +60,11 @@ public class FPSController : MonoBehaviour
     public KeyCode m_DebugLockKeyCode = KeyCode.O;
     public KeyCode m_AttachObjectsKeyCode = KeyCode.E;
 
-    //[Header("Respawn")]
-    //public Transform m_RespawnPoint;
-    //public Transform m_RespawnZone0;
-    //public Transform m_RespawnZone1;
-    //public Transform m_RespawnZone2;
+    [Header("Respawn")]
+    public Transform m_RespawnPoint;
+    public Transform m_RespawnZone0;
+    public Transform m_RespawnZone1;
+    public Transform m_RespawnZone2;
 
     [Header("Sounds")]
     public AudioSource m_DamageSound;
@@ -101,7 +100,7 @@ public class FPSController : MonoBehaviour
         m_VerticalSpeed = 0.0f;
         Cursor.lockState = CursorLockMode.Locked;
         m_Life = m_MaxLife;
-        //m_RespawnPoint = m_RespawnZone0;
+        m_RespawnPoint=m_RespawnZone0;
     }
 
     void Update()
@@ -284,7 +283,10 @@ public class FPSController : MonoBehaviour
         #endregion
 
         if (m_Life <= 0)
+        {
             KillPlayer();
+            m_GameController.GameOver();
+        }
 
         #region HUD
         m_BloodScreen.color = new Color(1f, 0, 0, m_alphaBloodScreen);
@@ -301,13 +303,13 @@ public class FPSController : MonoBehaviour
         if (other.tag == "DeadZone")
             KillPlayer();
 
-        //if (other.tag == "RespawnZone")
-        //{
-        //    if (other.name == "RespawnZone1Col")
-        //        m_RespawnPoint = m_RespawnZone1;
-        //    if (other.name == "RespawnZone2Col")
-        //        m_RespawnPoint = m_RespawnZone2;
-        //}
+        if (other.tag == "RespawnZone")
+        {
+            if (other.name == "RespawnZone1Col")
+                m_RespawnPoint = m_RespawnZone1;
+            if (other.name == "RespawnZone2Col")
+                m_RespawnPoint = m_RespawnZone2;
+        }
 
         if (other.tag == "Portal")
         {
@@ -321,9 +323,6 @@ public class FPSController : MonoBehaviour
                     Teleport(other.GetComponent<SubPortal>());
                 }
         }
-
-        //if (other.tag == "CompanionSpawner")
-        //    other.GetComponent<CompanionSpawner>().Spawn();
     }
 
     private void OnTriggerExit(Collider other)
@@ -333,8 +332,8 @@ public class FPSController : MonoBehaviour
 
     }
 
-    public void KillPlayer() => m_Life = 0;
 
+    #region Teleport
     void Teleport(SubPortal _Portal)
     {
         Vector3 l_PitchDirection = _Portal.m_MirrorPortalTransform.InverseTransformDirection(m_PitchController.forward);
@@ -357,7 +356,9 @@ public class FPSController : MonoBehaviour
         if (m_AttachedObject)
             m_ObjectAttached.GetComponent<Collider>().enabled = true;
     }
+    #endregion
 
+    #region Attach & Throw Objects
     void TryAttachObject()
     {
         Ray l_Ray = m_Camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.5f));
@@ -449,7 +450,9 @@ public class FPSController : MonoBehaviour
         m_ObjectAttached.SetTeleportable(true);
         m_ObjectAttached = null;
     }
+    #endregion
 
+    #region Health Interactors
     public void HurtingPlayer(int Damage)
     {
         m_alphaBloodScreen = 0.7f;
@@ -457,6 +460,9 @@ public class FPSController : MonoBehaviour
         RemoveLife(Damage);
 
     }
+    public void KillPlayer() => m_Life = 0;
+    public void RePatchPlayer() => m_Life = m_MaxLife;
+    #endregion
 
     #region Get Set i Remove Life
     public void AddLife(int LifePoints) => m_Life += LifePoints;
