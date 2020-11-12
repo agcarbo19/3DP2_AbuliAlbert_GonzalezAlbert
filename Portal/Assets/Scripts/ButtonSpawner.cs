@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Button : MonoBehaviour
+public class ButtonSpawner : MonoBehaviour
 {
     public AudioSource m_ButtonDown;
     public AudioSource m_ButtonUp;
-    public GameObject m_ActionGameObject;
+    public int m_Id;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -14,7 +14,7 @@ public class Button : MonoBehaviour
         {
             transform.position = new Vector3(transform.position.x, transform.position.y - 0.2f, transform.position.z);
             m_ButtonDown.Play();
-            m_ActionGameObject.GetComponent<ButtonAction>().m_InAction = true;
+            GameEvents.m_Current.ButtonSpawnCompanion(m_Id);
         }
     }
 
@@ -24,7 +24,6 @@ public class Button : MonoBehaviour
         {
             transform.position = new Vector3(transform.position.x, transform.position.y + 0.2f, transform.position.z);
             m_ButtonUp.Play();
-            m_ActionGameObject.GetComponent<FlipPanel>().m_InAction = true;
         }
     }
 

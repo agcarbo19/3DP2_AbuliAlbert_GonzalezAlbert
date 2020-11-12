@@ -321,8 +321,8 @@ public class FPSController : MonoBehaviour
                 }
         }
 
-        if (other.tag == "CompanionSpawner")
-            other.GetComponent<CompanionSpawner>().Spawn();
+        //if (other.tag == "CompanionSpawner")
+        //    other.GetComponent<CompanionSpawner>().Spawn();
     }
 
     private void OnTriggerExit(Collider other)
