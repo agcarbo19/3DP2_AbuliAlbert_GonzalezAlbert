@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class Turret : MonoBehaviour
 {
-    public LineRenderer m_Laser;
     public float m_MaxDistance = 250f;
     public float m_DotLaserAlive = 0.86f;
-    public int m_BulletDamage = 100;
     public float m_FireRate = 1.0f;
     public float m_NextTimeToFire = 0.0f;
     public float m_ImpactForce = 30f;
+    public int m_Health = 100;
+    public int m_BulletDamage = 100;
     public LayerMask m_LayerMask;
+    public LineRenderer m_Laser;
     public AudioSource m_MachineGun;
+    public ParticleSystem m_Explosion;
 
     void Update()
     {
@@ -42,12 +44,16 @@ public class Turret : MonoBehaviour
             }
         }
 
-
+        if (m_Health <= 0)
+        {
+            GameObject.Instantiate(m_Explosion, transform.position, Quaternion.identity);
+            Destroy(gameObject);
+        }
     }
 
     public void TakeDamage(int Damage)
     {
-
+        m_Health -= Damage;
     }
 
     private void Shoot(Transform _Target)

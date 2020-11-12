@@ -40,8 +40,8 @@ public class WeaponController : MonoBehaviour
     //[Header("Reloading")]
     ////public KeyCode m_ReloadKey;
 
-    //[Header("Sounds")]
-    //public AudioSource m_ShootSound;
+    [Header("Sounds")]
+    public AudioSource m_ShootSound;
 
     private void Start()
     {
@@ -68,7 +68,7 @@ public class WeaponController : MonoBehaviour
     private void Shoot(SubPortal _Portal)
     {
         //m_Animator.SetTrigger("IsShooting");
-        //m_ShootSound.Play();
+        m_ShootSound.Play();
         //m_WeaponFlash.Play();
 
         if (!m_ValidPosition)

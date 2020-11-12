@@ -193,8 +193,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1.5, z: 2}
-  m_Center: {x: -0.35, y: 0.3, z: -0.98}
+  m_Size: {x: 1, y: 1.7683442, z: 1.9751189}
+  m_Center: {x: -0.07, y: 0.7511934, z: -0.7673224}
 --- !u!114 &9098310623269383904
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -207,16 +207,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f13436cb62e8f9408decaab5fb74e99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Laser: {fileID: 9098310622990084792}
   m_MaxDistance: 250
   m_DotLaserAlive: 0.86
-  m_BulletDamage: 100
   m_FireRate: 2
   m_NextTimeToFire: 0
+  m_ImpactForce: 30
+  m_Health: 100
+  m_BulletDamage: 100
   m_LayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  m_Laser: {fileID: 9098310622990084792}
   m_MachineGun: {fileID: 9098310623269383932}
+  m_Explosion: {fileID: 3399767890346948382, guid: 9f51340e65091eb43bb23c1562b8eea6, type: 3}
 --- !u!82 &9098310623269383932
 AudioSource:
   m_ObjectHideFlags: 0

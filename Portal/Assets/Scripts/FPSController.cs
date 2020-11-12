@@ -69,6 +69,7 @@ public class FPSController : MonoBehaviour
 
     [Header("Sounds")]
     public AudioSource m_DamageSound;
+    public AudioSource m_GravitySound;
 
 
     [Header("AttachObjects")]
@@ -370,6 +371,7 @@ public class FPSController : MonoBehaviour
 
     void AttachObject(Collider _Collider)
     {
+        m_GravitySound.Play();
         m_AttachingObject = true;
         m_ObjectAttached = _Collider.GetComponent<Companion>();
         m_ObjectAttached.SetTeleportable(false);
