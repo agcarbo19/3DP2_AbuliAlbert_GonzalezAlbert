@@ -16,9 +16,14 @@ public class CompanionSpawner : MonoBehaviour
     {
         if (_id == m_Id)
         {
-        GameObject l_Companion = GameObject.Instantiate(m_CompanionPrefab);
-        l_Companion.transform.position = transform.position;
-        l_Companion.transform.rotation = transform.rotation;
+            GameObject l_Companion = GameObject.Instantiate(m_CompanionPrefab);
+            l_Companion.transform.position = transform.position;
+            l_Companion.transform.rotation = transform.rotation;
         }
+    }
+
+    private void OnDestroy()
+    {
+        GameEvents.m_Current.OnButtonSpawnCompanion -= Spawn;
     }
 }
