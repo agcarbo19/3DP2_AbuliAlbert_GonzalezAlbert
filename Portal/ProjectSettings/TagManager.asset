@@ -10,6 +10,7 @@ TagManager:
   - Companion
   - Cube
   - EnemyTurret
+  - Lava
   layers:
   - Default
   - TransparentFX

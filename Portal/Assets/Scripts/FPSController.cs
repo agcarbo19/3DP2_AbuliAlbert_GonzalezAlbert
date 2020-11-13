@@ -300,7 +300,7 @@ public class FPSController : MonoBehaviour
     public void OnTriggerEnter(Collider other)
     {
 
-        if (other.tag == "DeadZone")
+        if (other.tag == "Lava")
             KillPlayer();
 
         if (other.tag == "RespawnZone")
