@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class OpenDualDoor : MonoBehaviour
 {
-    public ButtonOpenDoor m_Button1;
-    public ButtonOpenDoor m_Button2;
+    public ButtonOpenDualDoor m_Button1;
+    public ButtonOpenDualDoor m_Button2;
 
     private void Update()
     {

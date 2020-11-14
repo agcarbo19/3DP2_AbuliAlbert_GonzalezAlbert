@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ButtonOpenDoor : MonoBehaviour
+public class ButtonOpenDualDoor : MonoBehaviour
 {
     public AudioSource m_ButtonDown;
     public AudioSource m_ButtonUp;
     public int m_Id;
+    public int m_ReturnedId = 0;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -14,8 +15,7 @@ public class ButtonOpenDoor : MonoBehaviour
         {
             transform.position = new Vector3(transform.position.x, transform.position.y - 0.2f, transform.position.z);
             m_ButtonDown.Play();
-
-            GameEvents.m_Current.ButtonOpenDoor(m_Id);
+            m_ReturnedId = m_Id;
         }
     }
 
@@ -25,6 +25,8 @@ public class ButtonOpenDoor : MonoBehaviour
         {
             transform.position = new Vector3(transform.position.x, transform.position.y + 0.2f, transform.position.z);
             m_ButtonUp.Play();
+            m_ReturnedId = 0;
         }
     }
+
 }
