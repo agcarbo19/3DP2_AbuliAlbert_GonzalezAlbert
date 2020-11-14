@@ -26,8 +26,8 @@ public class DoorBehaviour : MonoBehaviour
                 {
                     if (m_isRoutine == false)
                     {
-                        gameObject.GetComponent<Animation>().Play("rightDoorOpen");
-                        gameObject.GetComponent<Animation>().Play("leftDoorOpen");
+                        gameObject.GetComponent<Animation>().Play("DoorOpen");
+                        //gameObject.GetComponent<Animation>().Play("leftDoorOpen");
 
                         StartCoroutine(DoorTimer());
                         m_isOpen = true;
@@ -42,8 +42,8 @@ public class DoorBehaviour : MonoBehaviour
     {
         yield return new WaitForSeconds(m_doorTimer);
 
-        gameObject.GetComponent<Animation>().Play("rightDoorClose");
-        gameObject.GetComponent<Animation>().Play("leftDoorClose");
+        gameObject.GetComponent<Animation>().Play("DoorClose");
+        //gameObject.GetComponent<Animation>().Play("leftDoorClose");
         m_isOpen = false;
         m_isRoutine = false;
     }
