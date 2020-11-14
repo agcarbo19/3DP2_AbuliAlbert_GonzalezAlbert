@@ -15,11 +15,14 @@ public class Turret : MonoBehaviour
     public LineRenderer m_Laser;
     public AudioSource m_MachineGun;
     public ParticleSystem m_Explosion;
+    public RefractionCube m_RefractionCubeHit;
 
     void Update()
     {
         bool l_LaserAlive = Vector3.Dot(transform.forward, Vector3.up) >= m_DotLaserAlive;
         m_Laser.gameObject.SetActive(l_LaserAlive);
+        RefractionCube l_RefractionCube = m_RefractionCubeHit;
+        m_RefractionCubeHit = null;
 
         if (l_LaserAlive)
         {
@@ -27,21 +30,37 @@ public class Turret : MonoBehaviour
             Ray l_Ray = new Ray(m_Laser.transform.position, m_Laser.transform.forward);
             float l_Distance = m_MaxDistance;
             if (Physics.Raycast(l_Ray, out l_RaycastHit, m_MaxDistance, m_LayerMask))
-                l_Distance = l_RaycastHit.distance;
-            m_Laser.SetPosition(1, new Vector3(0.0f, 0.0f, l_Distance));
-
-            Transform target = l_RaycastHit.transform;
-
-            if (target.tag == "Player" || target.tag == "EnemyTurret")
             {
-                if (Time.time >= m_NextTimeToFire)
+                l_Distance = l_RaycastHit.distance;
+
+                if (l_RaycastHit.collider.tag == "Player" || l_RaycastHit.collider.tag == "EnemyTurret")
                 {
-                    m_NextTimeToFire = Time.time + 1f / m_FireRate;
-                    Shoot(target);
-                    if (target.tag == "EnemyTurret")
-                        target.GetComponent<Rigidbody>().AddForce(-l_RaycastHit.normal * m_ImpactForce);
+                    if (Time.time >= m_NextTimeToFire)
+                    {
+                        m_NextTimeToFire = Time.time + 1f / m_FireRate;
+                        Shoot(l_RaycastHit.transform);
+                        if (l_RaycastHit.collider.tag == "EnemyTurret")
+                            l_RaycastHit.collider.GetComponent<Rigidbody>().AddForce(-l_RaycastHit.normal * m_ImpactForce);
+                    }
+                }
+
+                if (l_RaycastHit.collider.tag == "RefractionCube")
+                {
+                    m_RefractionCubeHit = l_RaycastHit.collider.GetComponent<RefractionCube>();
+                    m_RefractionCubeHit.Reflection(gameObject);
+                }
+                if (l_RaycastHit.collider.tag == "PortalRefection")
+                {
+                    SubPortal l_Portal = l_RaycastHit.collider.transform.parent.GetComponent<SubPortal>();
+                    l_Portal.Reflection(l_RaycastHit.point, l_Ray.direction);
                 }
             }
+            m_Laser.SetPosition(1, new Vector3(0f, 0f, l_Distance));
+        }
+
+        if (l_RefractionCube != m_RefractionCubeHit && l_RefractionCube!= null)
+        {
+            l_RefractionCube.StopReflection();
         }
 
         if (m_Health <= 0)

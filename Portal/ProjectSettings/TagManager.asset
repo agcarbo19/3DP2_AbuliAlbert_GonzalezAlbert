@@ -11,6 +11,7 @@ TagManager:
   - Cube
   - EnemyTurret
   - Lava
+  - RefractionCube
   layers:
   - Default
   - TransparentFX

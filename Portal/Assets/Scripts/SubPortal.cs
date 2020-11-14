@@ -11,13 +11,14 @@ public class SubPortal : MonoBehaviour
     public Camera m_Camera;
     public float m_CameraOffset = 0.6f;
     public Material m_CameraRTMaterial;
-    public AnimationClip m_OpenPortal;
-    private Animation m_Animation;
-    public Vector3 m_PortalToPlayer = new Vector3(0f,0f,0f);
+    public Vector3 m_PortalToPlayer = new Vector3(0f, 0f, 0f);
+    public LineRenderer m_Laser;
+    public LayerMask m_LaserLayerMask;
+    public RefractionCube m_RefractionCubeHit;
+    public float m_MaxDistance = 250f;
 
     private void Awake()
     {
-        m_Animation = gameObject.GetComponent<Animation>();
         m_GameController = FindObjectOfType<GameController>();
     }
     private void Start()
@@ -29,6 +30,7 @@ public class SubPortal : MonoBehaviour
         }
         m_Camera.targetTexture = new RenderTexture(Screen.width, Screen.height, 24);
         m_CameraRTMaterial.mainTexture = m_Camera.targetTexture;
+        m_Laser.gameObject.SetActive(false);
     }
 
     void Update()
@@ -50,13 +52,46 @@ public class SubPortal : MonoBehaviour
             m_CylinderPortal.SetActive(true);
         }
         m_PortalToPlayer = gameObject.transform.position - m_GameController.m_Player.transform.position;
-        //m_PortalToPlayer.Normalize();
-        //Debug.Log(gameObject.transform.name + " " + m_PortalToPlayer);
+
+        if (m_Laser.gameObject.activeSelf)
+            UpdateLaserDistance();
     }
 
-    private void OnEnable()
+    public void UpdateLaserDistance()
     {
-        //m_Animation.clip = m_OpenPortal;
-        //m_Animation.Play();
+        RefractionCube l_RefractionCube = m_RefractionCubeHit;
+        RaycastHit l_RaycastHit;
+        Ray l_Ray = new Ray(m_Laser.transform.position, m_Laser.transform.forward);
+        float l_Distance = m_MaxDistance;
+        m_RefractionCubeHit = null;
+
+        if (Physics.Raycast(l_Ray, out l_RaycastHit, m_MaxDistance, m_LaserLayerMask))
+        {
+            l_Distance = l_RaycastHit.distance;
+            if (l_RaycastHit.collider.tag == "RefractionCube")
+            {
+                m_RefractionCubeHit = l_RaycastHit.collider.GetComponent<RefractionCube>();
+                if (m_RefractionCubeHit.Reflection(gameObject))
+                    m_RefractionCubeHit = null;
+            }
+        }
+
+        m_Laser.SetPosition(1, new Vector3(0f, 0f, l_Distance));
+        if (l_RefractionCube != m_RefractionCubeHit)
+            l_RefractionCube.StopReflection();
     }
+
+    public void Reflection(Vector3 _Position, Vector3 _Direction)
+    {
+        //Debug.DrawLine(_Position, transform.forward * 5f, Color.red);
+        Vector2 l_LocalPosition = m_MirrorPortalTransform.InverseTransformPoint(_Position);
+        m_MirrorPortal.m_Laser.transform.localPosition = l_LocalPosition;
+
+        Vector3 l_LocalDirection = m_MirrorPortalTransform.InverseTransformDirection(_Direction);
+        m_MirrorPortal.m_Laser.transform.localRotation = Quaternion.LookRotation(l_LocalDirection);
+
+        m_MirrorPortal.m_Laser.gameObject.SetActive(true);
+        UpdateLaserDistance();
+    }
+
 }

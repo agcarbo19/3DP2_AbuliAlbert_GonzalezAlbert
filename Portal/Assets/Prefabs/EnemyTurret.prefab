@@ -220,6 +220,7 @@ MonoBehaviour:
   m_Laser: {fileID: 9098310622990084792}
   m_MachineGun: {fileID: 9098310623269383932}
   m_Explosion: {fileID: 3399767890346948382, guid: 9f51340e65091eb43bb23c1562b8eea6, type: 3}
+  m_RefractionCubeHit: {fileID: 0}
 --- !u!82 &9098310623269383932
 AudioSource:
   m_ObjectHideFlags: 0
