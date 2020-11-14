@@ -20,7 +20,6 @@ public class DoorController : MonoBehaviour
     {
         if (_id1 == m_Id1)
         {
-            Debug.Log("Door OPEN!");
             m_Animator.SetBool("DoorIsOpen", true);
             m_TimeToClose = true;
         }

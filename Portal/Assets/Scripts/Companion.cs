@@ -8,7 +8,7 @@ public class Companion : MonoBehaviour
     private bool m_Teleportable = true;
     private Rigidbody m_Rigidbody;
     private GameController m_GameController;
-
+    public ParticleSystem m_Explosion;
     private void Awake()
     {
         m_Rigidbody = GetComponent<Rigidbody>();
@@ -49,5 +49,10 @@ public class Companion : MonoBehaviour
     public void SetTeleportable(bool _Teleportable)
     {
         m_Teleportable = _Teleportable;
+    }
+
+    public void OnDestroy()
+    {
+        GameObject.Instantiate(m_Explosion, transform.position, Quaternion.identity);
     }
 }
