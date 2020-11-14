@@ -44,9 +44,10 @@ GameObject:
   - component: {fileID: 9218329987095999486}
   - component: {fileID: 9218329987095032126}
   - component: {fileID: 9218329987093098489}
+  - component: {fileID: 2094577064}
   m_Layer: 0
   m_Name: Stm_button02
-  m_TagString: Untagged
+  m_TagString: Button
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 1
@@ -127,6 +128,21 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 63.606373, y: 23.202843, z: 63.58835}
   m_Center: {x: -0.005149842, y: 13.641927, z: 0.019250315}
+--- !u!114 &2094577064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9218329987093098488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f433ba3d25268f4ab15edadffdae560, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ButtonDown: {fileID: 9218329987807794894}
+  m_ButtonUp: {fileID: 9218329987250033067}
+  m_Id: 2
 --- !u!1 &9218329987093098492
 GameObject:
   m_ObjectHideFlags: 0

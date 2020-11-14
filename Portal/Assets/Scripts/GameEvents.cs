@@ -12,11 +12,11 @@ public class GameEvents : MonoBehaviour
         m_Current = this;
     }
 
-    public event Action OnButtonOpenDoor;
-    public void ButtonOpenDoor()
+    public event Action<int> OnButtonOpenDoor;
+    public void ButtonOpenDoor(int _id)
     {
         if (OnButtonOpenDoor != null)
-            OnButtonOpenDoor();
+            OnButtonOpenDoor(_id);
     }
 
     public event Action<int> OnButtonSpawnCompanion;
@@ -26,4 +26,10 @@ public class GameEvents : MonoBehaviour
             OnButtonSpawnCompanion(_id);
     }
 
+    public event Action<int> OnButtonActivatePlatform;
+    public void ButtonActivatePlatform(int _id)
+    {
+        if (OnButtonActivatePlatform != null)
+            OnButtonActivatePlatform(_id);
+    }
 }

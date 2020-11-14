@@ -323,6 +323,9 @@ public class FPSController : MonoBehaviour
                     Teleport(other.GetComponent<SubPortal>());
                 }
         }
+
+        //if (other.tag == "MovingPlatform")
+            //transform.parent = other.transform;
     }
 
     private void OnTriggerExit(Collider other)
@@ -330,6 +333,8 @@ public class FPSController : MonoBehaviour
         if (other.tag == "Portal")
             m_CharacterController.enabled = true;
 
+        //if (other.tag == "MovingPlatform")
+            //transform.parent = null;
     }
 
 

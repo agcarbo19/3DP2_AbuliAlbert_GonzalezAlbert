@@ -12,6 +12,8 @@ TagManager:
   - EnemyTurret
   - Lava
   - RefractionCube
+  - Button
+  - ButtonCompanion
   layers:
   - Default
   - TransparentFX

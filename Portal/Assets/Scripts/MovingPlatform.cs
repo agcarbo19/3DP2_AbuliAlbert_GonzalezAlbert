@@ -6,6 +6,7 @@ public class MovingPlatform : MonoBehaviour
 {
     public Transform target;
     public float speed;
+    public int m_id;
 
     private Vector3 start, end;
 

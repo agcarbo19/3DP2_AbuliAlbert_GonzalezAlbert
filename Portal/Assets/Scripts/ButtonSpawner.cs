@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ButtonSpawner : MonoBehaviour
 {
+    public List<GameObject> m_Buttons;
     public AudioSource m_ButtonDown;
     public AudioSource m_ButtonUp;
     public int m_Id;
@@ -14,7 +15,18 @@ public class ButtonSpawner : MonoBehaviour
         {
             transform.position = new Vector3(transform.position.x, transform.position.y - 0.2f, transform.position.z);
             m_ButtonDown.Play();
-            GameEvents.m_Current.ButtonSpawnCompanion(m_Id);
+
+            foreach (GameObject _Button in m_Buttons)
+            {
+                if (_Button.tag == "ButtonCompanion")
+                {
+                    GameEvents.m_Current.ButtonSpawnCompanion(m_Id);
+                }
+                else if (_Button.tag == "Button")
+                {
+                    GameEvents.m_Current.ButtonOpenDoor(m_Id);
+                }
+            }
         }
     }
 
