@@ -18,6 +18,13 @@ public class GameEvents : MonoBehaviour
         if (OnButtonOpenDoor != null)
             OnButtonOpenDoor(_id);
     }
+    
+    public event Action<int, int> OnButtonsOpenDoor;
+    public void ButtonsOpenDoor(int _id1, int _id2)
+    {
+        if (OnButtonsOpenDoor != null)
+            OnButtonsOpenDoor(_id1, _id2);
+    }
 
     public event Action<int> OnButtonSpawnCompanion;
     public void ButtonSpawnCompanion(int _id)

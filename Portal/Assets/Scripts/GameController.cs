@@ -39,7 +39,7 @@ public class GameController : MonoBehaviour
         m_OrangePortalActive = m_OrangePortal.activeSelf;
         if (m_GameOverPanel.activeSelf == true)
         {
-            if (Input.GetKey(KeyCode.Space))
+            if (Input.GetKey(KeyCode.E))
             {
                 Retry();
             }

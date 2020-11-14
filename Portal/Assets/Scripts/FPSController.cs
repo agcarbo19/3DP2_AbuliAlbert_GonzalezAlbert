@@ -305,9 +305,9 @@ public class FPSController : MonoBehaviour
 
         if (other.tag == "RespawnZone")
         {
-            if (other.name == "RespawnZone1Col")
+            if (other.name == "RespawnPoint1")
                 m_RespawnPoint = m_RespawnZone1;
-            if (other.name == "RespawnZone2Col")
+            if (other.name == "RespawnPoint2")
                 m_RespawnPoint = m_RespawnZone2;
         }
 

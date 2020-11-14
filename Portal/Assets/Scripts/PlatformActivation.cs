@@ -15,25 +15,25 @@ public class PlatformActivation : MonoBehaviour
         m_Platform.gameObject.SetActive(false);
         m_isActive = false;
 
-        GameEvents.m_Current.OnButtonActivatePlatform += ActivatePlatform;
+        //GameEvents.m_Current.OnButtonActivatePlatform += ActivatePlatform;
     }
 
-    public void ActivatePlatform(int _id)
-    {
-        foreach (int m_id in m_doorBehaviour.m_ids)
-        {
-            if (m_movingPlatform.m_id == m_id)
-            {
-                if (m_doorBehaviour.m_isOpen == true)
-                {
-                    m_isActive = true;
+    //public void ActivatePlatform(int _id)
+    //{
+    //    foreach (int m_id in m_doorBehaviour.m_ids)
+    //    {
+    //        if (m_movingPlatform.m_id == m_id)
+    //        {
+    //            if (m_doorBehaviour.m_isOpen == true)
+    //            {
+    //                m_isActive = true;
 
-                    if (m_isActive == true)
-                    {
-                        m_Platform.gameObject.SetActive(true);
-                    }
-                }
-            }
-        }
-    }
+    //                if (m_isActive == true)
+    //                {
+    //                    m_Platform.gameObject.SetActive(true);
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
 }

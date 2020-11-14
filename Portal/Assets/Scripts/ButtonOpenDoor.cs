@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ButtonSpawner : MonoBehaviour
+public class ButtonOpenDoor : MonoBehaviour
 {
-    //public List<GameObject> m_Buttons;
     public AudioSource m_ButtonDown;
     public AudioSource m_ButtonUp;
     public int m_Id;
+    public int m_ReturnedId = 0;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -15,20 +15,7 @@ public class ButtonSpawner : MonoBehaviour
         {
             transform.position = new Vector3(transform.position.x, transform.position.y - 0.2f, transform.position.z);
             m_ButtonDown.Play();
-
-            GameEvents.m_Current.ButtonSpawnCompanion(m_Id);
-
-            //foreach (GameObject _Button in m_Buttons)
-            //{
-            //    if (_Button.tag == "ButtonCompanion")
-            //    {
-            //        GameEvents.m_Current.ButtonSpawnCompanion(m_Id);
-            //    }
-            //    else if (_Button.tag == "Button")
-            //    {
-            //        GameEvents.m_Current.ButtonOpenDoor(m_Id);
-            //    }
-            //}
+            m_ReturnedId = m_Id;
         }
     }
 
@@ -38,6 +25,7 @@ public class ButtonSpawner : MonoBehaviour
         {
             transform.position = new Vector3(transform.position.x, transform.position.y + 0.2f, transform.position.z);
             m_ButtonUp.Play();
+            m_ReturnedId = 0;
         }
     }
 
