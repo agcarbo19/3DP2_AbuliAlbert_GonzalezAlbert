@@ -24,6 +24,9 @@ public class Companion : MonoBehaviour
                 gameObject.GetComponent<Collider>().enabled = false;
                 StartCoroutine(Teleport(other.GetComponent<SubPortal>()));
             }
+
+            if(other.tag=="Lava")
+                GameObject.Instantiate(m_Explosion, transform.position, Quaternion.identity);
         }
     }
 
@@ -51,8 +54,4 @@ public class Companion : MonoBehaviour
         m_Teleportable = _Teleportable;
     }
 
-    public void OnDestroy()
-    {
-        GameObject.Instantiate(m_Explosion, transform.position, Quaternion.identity);
-    }
 }
